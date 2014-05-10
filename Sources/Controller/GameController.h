@@ -14,6 +14,8 @@ public:
 	virtual void update(float delta);
 
 	void normalizePos(Entity *pEntity);
+
+	void setPlayer(Friend *pPlayer);
 	void addFriend(Friend *pFriend);
 	void addEnermy(Enermy *pEnermy);
 
@@ -21,9 +23,10 @@ public:
 	Enermy *conflictWithEnermy(Friend *collider);
 	bool conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNormal);
 
-	void setAttackingFriend(Friend *pFriend);
-	void addAttackingFriend(Friend *pAttackingFriend);
-	void leaveFromAttacking(Friend *pAttackingFriend);
+	void setAttackingEntity(Entity *pEntity);
+	void leaveFromAttacking(Entity *pAttackingEntity);
+
+	void friendsAttacked(int hp);
 
 	// 触屏事件处理函数
 	virtual void registerWithTouchDispatcher();
@@ -32,15 +35,17 @@ public:
 	virtual void ccTouchEnded(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
 
 protected:
-	std::vector<Friend*> mFriendVec;
-	std::vector<Enermy*> mEnermyVec;
-	std::vector<Friend*> mAttackingVec;
-	Friend *mAttackingFriend;
+	Friend *mPlayer;						// 主角
+	std::vector<Friend*> mFriendVec;		// 友军们
+	std::vector<Enermy*> mEnermyVec;		// 敌人们
+	std::vector<Entity*> mEntityVec;		// 所有参与的Entities
+	Entity *mAttackingEntity;				// 当前正在进行攻击的Entity
 
 private:
 	int mSpeedX, mSpeedY;
 	cocos2d::CCPoint mTouchBeginPos, mTouchEndPos;
 	cocos2d::CCSprite *mpArrowSprite;
+	bool mIsAttacking;			// 当前是否已经在进行攻击
 };
 
 #endif

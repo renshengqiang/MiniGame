@@ -9,7 +9,6 @@ using namespace cocos2d::extension;
 Friend::Friend(const char *fileName)
 {
 	mAttackTimeLeft = 0;
-	mAttacking = false;
 	mxSpeed = 0;
 	mySpeed = 0;
 	mLastConflictedEntity = NULL;
@@ -47,7 +46,7 @@ void Friend::update(float delta)
 {
 	Entity::update(delta);
 
-	if(mAttacking)
+	if(m_attacking)
 	{
 		CCPoint dest = Entity::getTagPosition();
 		dest.x += mxSpeed * delta;
@@ -58,13 +57,14 @@ void Friend::update(float delta)
 
 		if(NULL == m_controller) 
 		{
-			mAttacking = false;
+			m_attacking = false;
 			return;
 		}
 
 		if(mAttackTimeLeft <= 0)
 		{
-			mAttacking = false;
+			m_attacking = false;
+			m_activated = false;
 			m_controller->leaveFromAttacking(this);
 		}
 
@@ -84,11 +84,11 @@ void Friend::update(float delta)
 			CCPoint reflectedVelocity;
 			reflectedVelocity.x = -2*(mxSpeed*normalVec.x + mySpeed*normalVec.y)*normalVec.x/(normalVec.getLength()*normalVec.getLength()) + originalVelocity.x;
 			reflectedVelocity.y = -2*(mxSpeed*normalVec.x + mySpeed*normalVec.y)*normalVec.y/(normalVec.getLength()*normalVec.getLength()) + originalVelocity.y;
-			setSpeed(reflectedVelocity.x, reflectedVelocity.y);
+			setAttackSpeed(reflectedVelocity.x, reflectedVelocity.y);
 
-			//触发队友的友情技能
-			pConflictedFriend->attack2();
-			m_controller->addAttackingFriend(pConflictedFriend);
+			//TODO: 触发队友的友情技能
+			//pConflictedFriend->attack2();
+			//m_controller->addAttackingFriend(pConflictedFriend);
 
 			return;
 		}
@@ -107,7 +107,7 @@ void Friend::update(float delta)
 			CCPoint reflectedVelocity;
 			reflectedVelocity.x = -2*(mxSpeed*normalVec.x + mySpeed*normalVec.y)*normalVec.x/(normalVec.getLength()*normalVec.getLength()) + originalVelocity.x;
 			reflectedVelocity.y = -2*(mxSpeed*normalVec.x + mySpeed*normalVec.y)*normalVec.y/(normalVec.getLength()*normalVec.getLength()) + originalVelocity.y;
-			setSpeed(reflectedVelocity.x, reflectedVelocity.y);
+			setAttackSpeed(reflectedVelocity.x, reflectedVelocity.y);
 			
 			// TODO:这里需要判断当前在用哪种技能
 			pConflictedEnermy->underAttack(mAttack1Hurt);
@@ -129,18 +129,18 @@ void Friend::update(float delta)
 			CCPoint reflectedVelocity;
 			reflectedVelocity.x = -2*(mxSpeed*normalVec.x+mySpeed*normalVec.y)*normalVec.x/normalVec.getLength() + mxSpeed;
 			reflectedVelocity.y = -2*(mxSpeed*normalVec.x+mySpeed*normalVec.y)*normalVec.y/normalVec.getLength() + mySpeed;
-			mxSpeed = reflectedVelocity.x;
-			mySpeed = reflectedVelocity.y;
+			setAttackSpeed(reflectedVelocity.x, reflectedVelocity.y);
 		}
 	}
 	m_controller->normalizePos(this);
 }
 
-void Friend::attack1()
+void Friend::attack()
 {
-	mAttacking = true;
+	m_attacking = true;
 	m_activated = false;
 	mAttackTimeLeft = 2;
+	mLastConflictedEntity = NULL;
 }
 
 void Friend::attack2()

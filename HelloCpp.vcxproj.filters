@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{f50f642a-24a0-4952-b7b1-62c676201a4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AppDelegate">
+      <UniqueIdentifier>{b7816283-3f65-46b6-9c68-32a9c2fa2ada}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{b1f68da4-e53b-4316-b06e-36490c7d9ac5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{73b7efaf-8b7c-42c1-8396-722f61427204}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects">
+      <UniqueIdentifier>{7b70ab79-7b4e-4a22-9f15-1c0892efec2e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\win32\main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\AppDelegate\AppDelegate.cpp">
+      <Filter>AppDelegate</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scenes\GameScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Entity\Entity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Entity\Friend.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Controller\GameController.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Entity\Enermy.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Effects\FlowWord.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\win32\main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\AppDelegate\AppDelegate.h">
+      <Filter>AppDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scenes\GameScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Entity\Entity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Entity\Friend.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Controller\ControllerListener.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Controller\GameController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Entity\Enermy.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Utils.h" />
+    <ClInclude Include="Sources\Effects\FlowWord.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -7,12 +7,16 @@ class Enermy : public Entity
 public:
 	Enermy(const char *fileName);
 
-	void bindSprite(cocos2d::CCSprite *sprite);
-
+	void setAttackHurt(int hp){ mAttackHurt = hp; }
+	virtual void bindSprite(cocos2d::CCSprite *sprite);
+	virtual void attack();
 	virtual void setController(GameController *controller);
 
+	void attackEnd(float delta);
+
 private:
-	bool mActive;	// 当前自己是否是活跃对象
+	int mAttackHurt;	// 技能伤害值
+
 };
 
 #endif

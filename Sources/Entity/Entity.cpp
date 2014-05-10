@@ -12,7 +12,10 @@ Entity::Entity():
 	m_sprite(NULL),
 	m_hpSlider(NULL),
 	m_controller(NULL),
-	m_activated(false)
+	m_activated(false),
+	m_attacking(false),
+	m_autoAttack(false),
+	flag(true)
 {
 	CCNode::scheduleUpdate();	// 子类不需要再调用这个函数
 }
@@ -71,7 +74,6 @@ void Entity::setActive(bool active)
 
 void Entity::update(float delta)
 {
-	static bool flag = false;
 	if(m_activated)		// 随机晃动一个距离
 	{
 		if(!flag)

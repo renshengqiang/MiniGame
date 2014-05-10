@@ -16,9 +16,13 @@ public:
 	bool isActive(){ return m_activated; }
 	void setActive(bool active);
 
+	bool isAuto() { return m_autoAttack; }
+	bool dead() { return m_hp<=0; }
 	void setHp(int hp);
 	void health(int hp);
 	virtual void underAttack(int hp);
+	virtual void attack() = 0;		// 释放技能
+	virtual void setAttackSpeed(float x, float y){}; // 设置攻击速度，为了方便统一设置，将此函数放在这里
 
 	virtual void setController(GameController *controller);
 
@@ -33,6 +37,10 @@ protected:
 	cocos2d::extension::CCControlSlider *m_hpSlider; /*血量条*/
 	GameController *m_controller;	// Game控制逻辑
 	bool m_activated;				// 当前Entity是否是激活待发射武器的
+	bool m_attacking;				// 当前自己是否是攻击者
+	bool m_autoAttack;				// 是否是主动攻击对象
+
+	bool flag;						// 临时变量，用于对当前活跃对象进行闪烁
 };
 
 #endif
