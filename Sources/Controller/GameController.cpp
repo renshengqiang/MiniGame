@@ -245,9 +245,10 @@ bool GameController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 
 	mTouchBeginPos = mAttackingEntity->getTagPosition();
 	//TODO: 判断当前是哪个选手在进行攻击，并且创建箭头
-	//mpArrowSprite = CCSprite::create("arrow.jpg");
-	//CCLayer::addChild(mpArrowSprite);
-	//mpArrowSprite->setPosition(CCPoint(100, 100));
+	mpArrowSprite = CCSprite::create("arrow.png");
+	mpArrowSprite->setScaleX(2.0f);
+	CCLayer::addChild(mpArrowSprite);
+	mpArrowSprite->setPosition(mTouchBeginPos);
 
 	return true;
 }
@@ -264,11 +265,25 @@ void GameController::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
 	touchPos = CCDirector::sharedDirector()->convertToGL(touchPos);
 
 	//TODO:改变箭头方向 
+	CCPoint delta = touchPos - mTouchBeginPos;
+	float angle = delta.getAngle(CCPoint(1,0));
+	if(mpArrowSprite)
+	{
+		CCLOG("angle %f\n", angle);
+		mpArrowSprite->setRotation(angle*180/M_PI);
+	}
 }
 
 void GameController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 {
 	if(mIsAttacking) return;
+
+	// 释放箭头
+	if(mpArrowSprite != NULL)
+	{
+		mpArrowSprite->getParent()->removeChild(mpArrowSprite, true);
+		mpArrowSprite = NULL;
+	}
 
 	// 获取单击的坐标
 	CCPoint touchPos = pTouch->getLocationInView();

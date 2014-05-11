@@ -37,5 +37,5 @@ void LoginScene::login(CCObject *pSender, CCControlEvent event)
 {
 	CCScene *pScene = GameScene::scene();
 	CCDirector::sharedDirector()->replaceScene(
-	CCTransitionSlideInT::create(3.0f, pScene));
+	CCTransitionSlideInT::create(1.0f, pScene));
 }

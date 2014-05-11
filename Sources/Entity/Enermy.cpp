@@ -32,6 +32,21 @@ void  Enermy::bindSprite(cocos2d::CCSprite *sprite)
 void Enermy::attack()
 {
 	//TODO: 创建一个具有一定时长的爆炸粒子效果
+	////创建CCParticleExplosion特效
+	CCParticleSystem * p1=CCParticleExplosion::create();
+	p1->setDuration(ENERMY_ATTACK_TIME);
+	p1->setLife(ENERMY_ATTACK_TIME);
+	p1->setSpeed(p1->getSpeed() * 4);
+	//设置特效贴图
+	p1->setTexture(CCTextureCache::sharedTextureCache()->addImage("particles.png"));
+	//设置自动释放
+	p1->setAutoRemoveOnFinish(true);
+	//设置移动类型
+	p1->setPositionType(kCCPositionTypeGrouped);
+	//设置位置
+	p1->setPosition(ccp(0, 0));
+	//添加特效
+	this->addChild(p1);
 	// 然后创建一个定时任务，爆炸结束后通知controller对友军进行伤害，然后到下一个继续执行
 	scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
 }
