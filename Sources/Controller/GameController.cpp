@@ -191,14 +191,16 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 */
 void  GameController::friendsAttacked(int hp)
 {
-	// 1
-	// 2
 	for(int i=0; i<mFriendVec.size(); ++i)
 	{
 		if(mFriendVec[i]->dead() == false)
 		{
 			mFriendVec[i]->underAttack(hp);
-			// TODO: 判断是否造成死亡，死亡则将其隐藏
+			if(mFriendVec[i]->dead())
+			{
+				// 友军死亡，播放特效
+				mFriendVec[i]->setVisible(false);
+			}
 		}
 	}
 }
