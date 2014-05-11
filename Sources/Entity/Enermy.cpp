@@ -36,6 +36,19 @@ void Enermy::attack()
 	scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
 }
 
+void Enermy::underAttack(int hp)
+{
+	if(m_hp < hp) hp = m_hp;
+	Entity::underAttack(hp);
+
+	if(dead())
+	{
+		scheduleOnce(schedule_selector(Enermy::die), DIE_TIME);
+		// TODO: ²¥·ÅËÀÍöÌØÐ§
+	}
+	
+}
+
 void Enermy::setController(GameController *controller)
 {
 	Entity::setController(controller);
@@ -49,4 +62,9 @@ void Enermy::attackEnd(float)
 	m_activated = false;
 	m_controller->friendsAttacked(mAttackHurt);
 	m_controller->leaveFromAttacking(this);
+}
+
+void Enermy::die(float)
+{
+	setVisible(false);
 }

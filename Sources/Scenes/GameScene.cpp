@@ -41,12 +41,12 @@ void GameScene::initPlayer()
 
 	// 创建主角
 	Friend *pFriend = new Friend("Friend.png");
+	gameController->setPlayer(pFriend);
 	pFriend->setScale(0.5f);
 	pFriend->setAttack1Hurt(2*ATTACK_HURT);
 	pFriend->setController(gameController);
 	pFriend->health(2*FULL_HEALTH);
 	addFriend(pFriend, CCPoint(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
-	gameController->setPlayer(pFriend);
 
 	// 创建2个Friends
 	CCPoint pos[2];
@@ -87,14 +87,14 @@ void GameScene::initPlayer()
 
 void GameScene::addFriend(Friend *pFriend, const CCPoint &pos)
 {
-	CCLayer::addChild(pFriend);
+	CCLayer::addChild(pFriend, 1);
 	pFriend->setTagPosition(pos.x, pos.y);
 	mFriendVec.push_back(pFriend);
 }
 
 void GameScene::addEnermy(Enermy *pEnermy, const CCPoint &pos)
 {
-	CCLayer::addChild(pEnermy);
+	CCLayer::addChild(pEnermy, 1);
 	pEnermy->setTagPosition(pos.x, pos.y);
 	mEnermyVec.push_back(pEnermy);
 }

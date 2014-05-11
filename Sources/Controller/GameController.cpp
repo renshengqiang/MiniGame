@@ -56,6 +56,7 @@ void GameController::setPlayer(Friend *pPlayer)
 	mPlayer = pPlayer;
 	mAttackingEntity = pPlayer;
 	pPlayer->setActive(true);
+	pPlayer->setTiggleFlag(false);		// 主角是没有友情技能的
 	mEntityVec.push_back(pPlayer);
 }
 
@@ -90,11 +91,21 @@ Friend *GameController::conflictWithFriend(Friend *collider)
 	for(int i=0; i<mFriendVec.size(); ++i)
 	{
 		if(mFriendVec[i] == collider) continue;
+		if(mFriendVec[i]->dead()) continue;
 		CCPoint pos2 = mFriendVec[i]->getTagPosition();
 		CCPoint dist = pos2 - pos;
 		if(ccpLength(dist) <= FRIEND_SIZE)
 			return mFriendVec[i];
 	}
+
+	if(collider != mPlayer)
+	{
+		CCPoint pos2 = mPlayer->getTagPosition();
+		CCPoint dist = pos2 - pos;
+		if(ccpLength(dist) <= FRIEND_SIZE)
+			return mPlayer;
+	}
+
 	return NULL;
 }
 
@@ -107,6 +118,7 @@ Enermy *GameController::conflictWithEnermy(Friend *collider)
 
 	for(int i=0; i<mEnermyVec.size(); ++i)
 	{
+		if(mEnermyVec[i]->dead()) continue;
 		CCPoint pos2 = mEnermyVec[i]->getTagPosition();
 		CCPoint dist = pos2 - pos;
 		if(ccpLength(dist) <= FRIEND_SIZE)
@@ -156,6 +168,7 @@ bool GameController::conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNo
 2. 如果所有的敌人死亡，则胜利，进入下一个场景（关卡）；
 3. 否则选择下一个Entity进行下一轮的攻击；
 4. 如果下一个攻击的对象是怪物，则进行自动攻击
+5. 设置友情技能的标志位为false
 */
 void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 {
@@ -172,6 +185,7 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 	while(mEntityVec[index]->dead()) index=(index+1)%mEntityVec.size();
 	mAttackingEntity = mEntityVec[index];
 
+	// 设置为激活状态，如果是自动攻击对象则进行自动攻击
 	mAttackingEntity->setActive(true);
 	if(mAttackingEntity->isAuto())
 	{
@@ -182,6 +196,12 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 	{
 		mIsAttacking = false;
 	}
+
+	// 新一轮攻击开始，触发标志位复位
+	for(int i=0; i<mFriendVec.size(); ++i)
+	{
+		mFriendVec[i]->setTiggleFlag(false);
+	}
 }
 
 /*
@@ -191,18 +211,29 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 */
 void  GameController::friendsAttacked(int hp)
 {
+	// TODO:首先要判断主角是否已经死亡，若主角死亡则直接调用结束场景
+	mPlayer->underAttack(hp);
+	if(mPlayer->dead())
+	{
+		//弹出死亡界面
+	}
+
+	// 对其他友军执行伤害动作
 	for(int i=0; i<mFriendVec.size(); ++i)
 	{
 		if(mFriendVec[i]->dead() == false)
 		{
 			mFriendVec[i]->underAttack(hp);
-			if(mFriendVec[i]->dead())
-			{
-				// 友军死亡，播放特效
-				mFriendVec[i]->setVisible(false);
-			}
 		}
 	}
+}
+
+/*
+**
+*/
+void GameController::enermyAttacked(Enermy *pEnermy, int hp)
+{
+	pEnermy->underAttack(hp);
 }
 
 /*

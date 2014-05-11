@@ -12,6 +12,7 @@ Friend::Friend(const char *fileName)
 	mxSpeed = 0;
 	mySpeed = 0;
 	mLastConflictedEntity = NULL;
+	mTriggleFlag = false;
 
 	CCSprite *sprite = CCSprite::create(fileName);
 	bindSprite(sprite);
@@ -87,9 +88,8 @@ void Friend::update(float delta)
 			setAttackSpeed(reflectedVelocity.x, reflectedVelocity.y);
 
 			//TODO: 触发队友的友情技能
-			//pConflictedFriend->attack2();
-			//m_controller->addAttackingFriend(pConflictedFriend);
-
+			pConflictedFriend->attack2();
+		
 			return;
 		}
 		
@@ -145,5 +145,32 @@ void Friend::attack()
 
 void Friend::attack2()
 {
-	//TODO:第二种技能
+	if(mTriggleFlag == false)
+	{
+		// TODO:释放友情技能
+
+		mTriggleFlag = true;
+	}
+}
+
+/*
+** 受到攻击，先执行Entity的扣血
+** 然后判断当前状态是否是死亡状态，若是则设置自己为不可见，同时播放死亡特效
+** 播放死亡特效的过程是先创建一个特效，然后创建一个定时任务，在定时任务的处理函数中设置当前对象不可见
+*/
+void Friend::underAttack(int hp)
+{
+	if(m_hp < hp) hp = m_hp;
+	Entity::underAttack(hp);
+
+	if(dead())
+	{
+		scheduleOnce(schedule_selector(Friend::die), DIE_TIME);
+		// TODO: 播放死亡特效
+	}
+}
+
+void Friend::die(float)
+{
+	setVisible(false);
 }

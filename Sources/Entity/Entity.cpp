@@ -63,8 +63,6 @@ void Entity::underAttack(int hp)
 	{
 		m_hpSlider->setValue(m_hp);
 	}
-
-	// 如果血量低于零，则通知GameController不要对此Entity进行管理工作
 }
 
 void Entity::setActive(bool active)

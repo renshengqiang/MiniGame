@@ -13,4 +13,7 @@ const int ATTACK_HURT = 5;
 
 const float ENERMY_ATTACK_TIME = 2.0f;
 
+const float DIE_TIME = 1.0f;
+
+
 #endif

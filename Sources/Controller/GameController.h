@@ -27,6 +27,7 @@ public:
 	void leaveFromAttacking(Entity *pAttackingEntity);
 
 	void friendsAttacked(int hp);
+	void enermyAttacked(Enermy *pEnermy, int hp);
 
 	// 触屏事件处理函数
 	virtual void registerWithTouchDispatcher();
