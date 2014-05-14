@@ -34,6 +34,8 @@ protected:
 	int m_hp;						// 血量
 	int m_fullHp;					// 健康状态下的血量
 	cocos2d::CCSprite *m_sprite;	// 人物精灵
+	cocos2d::CCSprite *m_magicSprite; //进入攻击模式的魔法阵
+	float m_magicTime;				// 魔法阵持续时间
 	cocos2d::extension::CCControlSlider *m_hpSlider; /*血量条*/
 	GameController *m_controller;	// Game控制逻辑
 	bool m_activated;				// 当前Entity是否是激活待发射武器的

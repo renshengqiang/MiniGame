@@ -10,6 +10,8 @@ Entity::Entity():
 	m_hp(0),
 	m_fullHp(100),
 	m_sprite(NULL),
+	m_magicSprite(NULL),
+	m_magicTime(0),
 	m_hpSlider(NULL),
 	m_controller(NULL),
 	m_activated(false),
@@ -74,15 +76,25 @@ void Entity::update(float delta)
 {
 	if(m_activated)		// 随机晃动一个距离
 	{
-		if(!flag)
-			CCNode::setScale(0.48, 0.48);
+		m_magicTime += delta;
+		if(NULL == m_magicSprite)
+		{
+			m_magicSprite = CCSprite::create("magic.png");
+			CCNode::addChild(m_magicSprite);
+		}
 		else
-			CCNode::setScale(0.5, 0.5);
-		flag = !flag;
+		{
+			m_magicSprite->setRotation(m_magicTime*180);
+		}
 	}
 	else
 	{
-		CCNode::setScale(0.5, 0.5);
+		if(m_magicSprite != NULL)
+		{
+			m_magicSprite->getParent()->removeChild(m_magicSprite, true);
+			m_magicSprite = NULL;
+			m_magicTime = 0;
+		}
 	}
 }
 

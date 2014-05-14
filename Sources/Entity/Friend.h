@@ -13,6 +13,7 @@ public:
 	void setAttack2Hurt(float hurt) { mAttack2Hurt = hurt;}
 	void setAttackSpeed(float x, float y) { mxSpeed = x; mySpeed = y; }
 	void setTiggleFlag(bool flag) { mTriggleFlag = flag; }
+	void setAttackTime(float time) { mAttackTimeLeft = time; }
 	virtual void setController(GameController *controller);
 
 	void update(float delta);

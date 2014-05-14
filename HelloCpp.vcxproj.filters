@@ -48,6 +48,9 @@
     <ClCompile Include="Sources\Scenes\LoginScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Scenes\WinScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\win32\main.h">
@@ -79,6 +82,9 @@
       <Filter>Effects</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scenes\LoginScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scenes\WinScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>

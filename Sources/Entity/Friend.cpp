@@ -139,7 +139,6 @@ void Friend::attack()
 {
 	m_attacking = true;
 	m_activated = false;
-	mAttackTimeLeft = 2;
 	mLastConflictedEntity = NULL;
 }
 

@@ -1,6 +1,7 @@
 #ifndef _MINIGAME_GAME_SCENE_H_
 #define _MINIGAME_GAME_SCENE_H_
 #include "cocos2d.h"
+#include "cocos-ext.h"
 #include <vector>
 
 class Friend;
@@ -15,8 +16,11 @@ public:
 private:
 	void initBackground();
 	void initPlayer();
+	void initWidget();
 	void addFriend(Friend *pFriend, const cocos2d::CCPoint &pos);
 	void addEnermy(Enermy *pEnermy, const cocos2d::CCPoint &pos);
+
+	void onButtonClicked(CCObject *pSender, cocos2d::extension::CCControlEvent event);
 private:
 	cocos2d::CCSprite *mBGsprite;	 // ±³¾°
 	std::vector<Friend*> mFriendVec; // ÓÑ¾ü

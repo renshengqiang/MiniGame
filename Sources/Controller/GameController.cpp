@@ -1,6 +1,7 @@
 #include "GameController.h"
 #include "Entity\Friend.h"
 #include "Entity\Enermy.h"
+#include "Scenes\WinScene.h"
 #include "Utils.h"
 
 USING_NS_CC;
@@ -37,9 +38,9 @@ void GameController::normalizePos(Entity *pEntity)
 		pos.x = SCREEN_WIDTH - FRIEND_SIZE/2;
 	}
 
-	if(pos.y < FRIEND_SIZE/2)
+	if(pos.y < FRIEND_SIZE/2+WIDGET_SIZE)
 	{
-		pos.y = FRIEND_SIZE/2;
+		pos.y = FRIEND_SIZE/2 + WIDGET_SIZE;
 	}
 	else if(pos.y > SCREEN_HEIGHT - FRIEND_SIZE/2)
 	{
@@ -140,7 +141,7 @@ bool GameController::conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNo
 		wallNormal.x = 1;
 		wallNormal.y = 0;
 	}
-	else if(pos.y < FRIEND_SIZE/2)
+	else if(pos.y < WIDGET_SIZE + FRIEND_SIZE/2)
 	{
 		wallNormal.x = 0;
 		wallNormal.y = 1;
@@ -174,6 +175,20 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 {
 	// 1 游戏结束
 	// 2 进入下一个关卡
+	bool isAllEnermyDead = true;
+	for(int i=0; i<mEnermyVec.size(); ++i)
+	{
+		if(mEnermyVec[i]->dead() == false)
+		{
+			isAllEnermyDead = false;
+		}
+	}
+	if(true == isAllEnermyDead)
+	{
+		CCScene *pScene = WinScene::scene();
+		CCDirector::sharedDirector()->replaceScene(pScene);
+	}
+
 	// 3 选择下一个Entity进入攻击状态
 	int index = 0;
 	for(int i=0; i<mEntityVec.size(); ++i)
@@ -242,15 +257,24 @@ void GameController::enermyAttacked(Enermy *pEnermy, int hp)
 bool GameController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
 	if(mIsAttacking) return true;
+	// 获取坐标
+	CCPoint touchPos = pTouch->getLocationInView();
+	touchPos = CCDirector::sharedDirector()->convertToGL(touchPos);
+	mTouchBeginPos = touchPos;
 
-	mTouchBeginPos = mAttackingEntity->getTagPosition();
 	//TODO: 判断当前是哪个选手在进行攻击，并且创建箭头
 	mpArrowSprite = CCSprite::create("arrow.png");
-	mpArrowSprite->setScaleX(2.0f);
+	//mpArrowSprite->setScaleX(2.0f);
 	CCLayer::addChild(mpArrowSprite);
-	mpArrowSprite->setPosition(mTouchBeginPos);
+	mpArrowSprite->setPosition(mAttackingEntity->getTagPosition());
 
 	return true;
+}
+
+float _calcAttackTime(CCPoint delta)
+{
+	CCPoint max = CCPoint(SCREEN_WIDTH, SCREEN_HEIGHT);
+	return MAX_LIFE_TIME*delta.getLength()/max.getLength();
 }
 
 /*
@@ -263,14 +287,16 @@ void GameController::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
 	// 获取坐标
 	CCPoint touchPos = pTouch->getLocationInView();
 	touchPos = CCDirector::sharedDirector()->convertToGL(touchPos);
+	mTouchEndPos = touchPos;
 
 	//TODO:改变箭头方向 
-	CCPoint delta = touchPos - mTouchBeginPos;
+	CCPoint delta = mTouchBeginPos - touchPos;
 	float angle = delta.getAngle(CCPoint(1,0));
+	float attacktime = _calcAttackTime(delta);
 	if(mpArrowSprite)
 	{
-		CCLOG("angle %f\n", angle);
 		mpArrowSprite->setRotation(angle*180/M_PI);
+		mpArrowSprite->setScaleX(attacktime+1);
 	}
 }
 
@@ -278,6 +304,8 @@ void GameController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 {
 	if(mIsAttacking) return;
 
+	Friend *pAttackingFriend = dynamic_cast<Friend*>(mAttackingEntity);
+	if(pAttackingFriend == NULL) return;
 	// 释放箭头
 	if(mpArrowSprite != NULL)
 	{
@@ -285,17 +313,15 @@ void GameController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 		mpArrowSprite = NULL;
 	}
 
-	// 获取单击的坐标
-	CCPoint touchPos = pTouch->getLocationInView();
-	touchPos = CCDirector::sharedDirector()->convertToGL(touchPos);
-	mTouchEndPos = touchPos;
+	CCPoint dir = mTouchBeginPos - mTouchEndPos;
+	float attacktime = _calcAttackTime(dir);
+	CCPoint temp = dir.normalize();
 
-	CCPoint dir = mTouchEndPos - mTouchBeginPos;
-	dir = dir.normalize();
-	dir.x *= ATTACK_SPEED;
-	dir.y *= ATTACK_SPEED;
-	mAttackingEntity->setAttackSpeed(dir.x, dir.y);
+	mAttackingEntity->setAttackSpeed(attacktime*temp.x*UNIT_VELOCITY, attacktime*temp.y*UNIT_VELOCITY);
+	pAttackingFriend->setAttackTime(attacktime);
 	mAttackingEntity->attack();
+	
+	CCLOG("time:%f\n", 0.01f * dir.getLength());
 
 	mIsAttacking = true;
 }
