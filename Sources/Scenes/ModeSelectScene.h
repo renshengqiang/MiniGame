@@ -1,11 +1,9 @@
-#ifndef __LOGINSCENE_SCENE_H__
-#define __LOGINSCENE_SCENE_H__
+#ifndef __MODESELECTSCENE_SCENE_H__
+#define __MODESELECTSCENE_SCENE_H__
 
 #include "cocos2d.h"
-#include "Box2D\Box2D.h"
-#include "SimpleAudioEngine.h"
 
-class LoginScene : public cocos2d::CCLayer
+class ModeSelectScene : public cocos2d::CCLayer
 {
 public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
@@ -24,7 +22,7 @@ public:
 	virtual void onExit();
     
     // implement the "static node()" method manually
-    CREATE_FUNC(LoginScene);
+    CREATE_FUNC(ModeSelectScene);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

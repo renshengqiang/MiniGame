@@ -12,7 +12,7 @@ bool GameScene::init()
 {
 	initBackground();
 	initPlayer();
-	initWidget();
+	//initWidget();
 	return true;
 }
 
@@ -81,42 +81,45 @@ void GameScene::initPlayer()
 	// 创建主角
 	Friend *pFriend = new Friend("Friend.png");
 	gameController->setPlayer(pFriend);
-	pFriend->setScale(0.25f);
+	pFriend->setScale(0.5f);
 	pFriend->setAttack1Hurt(2*ATTACK_HURT);
+	pFriend->setAttack2Hurt(ATTACK_HURT);
 	pFriend->setController(gameController);
 	pFriend->health(2*FULL_HEALTH);
-	addFriend(pFriend, CCPoint(SCREEN_WIDTH/2, (SCREEN_HEIGHT-WIDGET_SIZE)/2+WIDGET_SIZE));
+	addFriend(pFriend, CCPoint(SCREEN_WIDTH/6, FRIEND_SIZE));
+	//addFriend(pFriend, CCPoint(SCREEN_WIDTH/2, (SCREEN_HEIGHT-WIDGET_SIZE)/2+WIDGET_SIZE));
 
 	// 创建2个Friends
 	CCPoint pos[2];
 	for(int i=0; i<2; ++i)
 	{
-		pos[i].x = visibleSize.width/4*(2*i+1);
-		pos[i].y = 100 + WIDGET_SIZE;
+		pos[i].x = visibleSize.width/6*(2*i+3);
+		pos[i].y = FRIEND_SIZE;
 	}
 
 	for(int i=0; i<2; ++i)
 	{
 		Friend *pFriend = new Friend("Friend.png");
-		pFriend->setScale(0.25);
+		pFriend->setScale(0.5);
 		pFriend->setAttack1Hurt(ATTACK_HURT);
+		pFriend->setAttack2Hurt(ATTACK_HURT);
 		pFriend->setController(gameController);
 		pFriend->health(FULL_HEALTH);
 		addFriend(pFriend, pos[i]);
 	}
 
 	// 创建二个敌人
-	Enermy *pEnermy = new Enermy("Friend.png");
+	Enermy *pEnermy = new Enermy("Enermy1.png");
 	CCPoint epos;
-	pEnermy->setScale(0.25);
+	pEnermy->setScale(0.5);
 	pEnermy->setHp(100);
 	pEnermy->setAttackHurt(ATTACK_HURT);
 	pEnermy->setController(gameController);
 	epos.y = SCREEN_HEIGHT-100; epos.x = visibleSize.width*0.25;
 	addEnermy(pEnermy, epos);
 
-	pEnermy = new Enermy("Friend.png");
-	pEnermy->setScale(0.25);
+	pEnermy = new Enermy("Enermy2.png");
+	pEnermy->setScale(0.5);
 	pEnermy->setHp(100);
 	pEnermy->setAttackHurt(ATTACK_HURT);
 	pEnermy->setController(gameController);

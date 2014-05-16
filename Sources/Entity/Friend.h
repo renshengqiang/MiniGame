@@ -20,6 +20,7 @@ public:
 	
 	virtual void attack();	//普通技能
 	void attack2();			//友情技能
+	void attack2End(float); //友情技能释放结束
 	virtual void underAttack(int hp);
 
 	void die(float delta);

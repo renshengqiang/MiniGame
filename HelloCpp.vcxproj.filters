@@ -45,10 +45,16 @@
     <ClCompile Include="Sources\Effects\FlowWord.cpp">
       <Filter>Effects</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Scenes\WinScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scenes\HeroIntroScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Scenes\LoginScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scenes\WinScene.cpp">
+    <ClCompile Include="Sources\Scenes\ModeSelectScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,10 +87,16 @@
     <ClInclude Include="Sources\Effects\FlowWord.h">
       <Filter>Effects</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scenes\WinScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scenes\HeroIntroScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Scenes\LoginScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scenes\WinScene.h">
+    <ClInclude Include="Sources\Scenes\ModeSelectScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>

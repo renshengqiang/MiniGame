@@ -147,11 +147,36 @@ void Friend::attack2()
 	if(mTriggleFlag == false)
 	{
 		// TODO:释放友情技能
-
+		////创建CCParticleExplosion特效
+		CCParticleSystem * p1=CCParticleExplosion::create();
+		p1->setDuration(ENERMY_ATTACK_TIME);
+		p1->setLife(ENERMY_ATTACK_TIME);
+		p1->setSpeed(p1->getSpeed() * 4);
+		//设置特效贴图
+		p1->setTexture(CCTextureCache::sharedTextureCache()->addImage("friend_particle.png"));
+		//设置自动释放
+		p1->setAutoRemoveOnFinish(true);
+		//设置移动类型
+		p1->setPositionType(kCCPositionTypeGrouped);
+		//设置位置
+		p1->setPosition(ccp(0, 0));
+		//添加特效
+		this->addChild(p1);
+		// 通知controller多了一个攻击者
+		m_controller->addAttackingFriend();
+		// 然后创建一个定时任务，爆炸结束后通知controller对友军进行伤害，然后到下一个继续执行
+		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
 		mTriggleFlag = true;
 	}
 }
 
+void Friend::attack2End(float)
+{
+	// 需要通知controller自己的攻击已经结束了，并对友军进行一定的伤害
+	// controller在收到该通知后才能继续选择下一个攻击的选手
+	m_controller->enermyAttacked(NULL, mAttack2Hurt);
+	m_controller->removeAttackingFriend();
+}
 /*
 ** 受到攻击，先执行Entity的扣血
 ** 然后判断当前状态是否是死亡状态，若是则设置自己为不可见，同时播放死亡特效

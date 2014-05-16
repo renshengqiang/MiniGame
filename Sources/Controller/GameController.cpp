@@ -14,6 +14,7 @@ bool GameController::init()
 
 	mAttackingEntity = NULL;
 	mIsAttacking = false;
+	mAttackingFriendCnt = 0;
 	return true;
 }
 
@@ -38,9 +39,9 @@ void GameController::normalizePos(Entity *pEntity)
 		pos.x = SCREEN_WIDTH - FRIEND_SIZE/2;
 	}
 
-	if(pos.y < FRIEND_SIZE/2+WIDGET_SIZE)
+	if(pos.y < FRIEND_SIZE/2)
 	{
-		pos.y = FRIEND_SIZE/2 + WIDGET_SIZE;
+		pos.y = FRIEND_SIZE/2;
 	}
 	else if(pos.y > SCREEN_HEIGHT - FRIEND_SIZE/2)
 	{
@@ -57,7 +58,6 @@ void GameController::setPlayer(Friend *pPlayer)
 	mPlayer = pPlayer;
 	mAttackingEntity = pPlayer;
 	pPlayer->setActive(true);
-	pPlayer->setTiggleFlag(false);		// 主角是没有友情技能的
 	mEntityVec.push_back(pPlayer);
 }
 
@@ -141,7 +141,7 @@ bool GameController::conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNo
 		wallNormal.x = 1;
 		wallNormal.y = 0;
 	}
-	else if(pos.y < WIDGET_SIZE + FRIEND_SIZE/2)
+	else if(pos.y < FRIEND_SIZE/2)
 	{
 		wallNormal.x = 0;
 		wallNormal.y = 1;
@@ -190,6 +190,7 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 	}
 
 	// 3 选择下一个Entity进入攻击状态
+	if(mAttackingFriendCnt > 0) return;
 	int index = 0;
 	for(int i=0; i<mEntityVec.size(); ++i)
 	{
@@ -219,6 +220,15 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 	}
 }
 
+void  GameController::addAttackingFriend()
+{
+	++mAttackingFriendCnt;
+}
+void  GameController::removeAttackingFriend()
+{
+	--mAttackingFriendCnt;
+	leaveFromAttacking(mAttackingEntity);
+}
 /*
 ** 怪物发动攻击，主角和友军会同时受到攻击
 ** 1. 如果主角死亡，则游戏结束；
@@ -248,7 +258,18 @@ void  GameController::friendsAttacked(int hp)
 */
 void GameController::enermyAttacked(Enermy *pEnermy, int hp)
 {
-	pEnermy->underAttack(hp);
+	if(pEnermy != NULL)
+		pEnermy->underAttack(hp);
+	else
+	{
+		for(unsigned i=0; i<mEnermyVec.size(); ++i)
+		{
+			if(mEnermyVec[i]->dead() == false)
+			{
+				mEnermyVec[i]->underAttack(hp);
+			}
+		}
+	}
 }
 
 /*
