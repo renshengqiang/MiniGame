@@ -2,6 +2,7 @@
 #include "Entity\Friend.h"
 #include "Entity\Enermy.h"
 #include "Scenes\WinScene.h"
+#include "Scenes\GameScene.h"
 #include "Utils.h"
 
 USING_NS_CC;
@@ -15,6 +16,7 @@ bool GameController::init()
 	mAttackingEntity = NULL;
 	mIsAttacking = false;
 	mAttackingFriendCnt = 0;
+	mpArrowSprite = NULL;
 	return true;
 }
 
@@ -39,9 +41,9 @@ void GameController::normalizePos(Entity *pEntity)
 		pos.x = SCREEN_WIDTH - FRIEND_SIZE/2;
 	}
 
-	if(pos.y < FRIEND_SIZE/2)
+	if(pos.y < FRIEND_SIZE/2 + WIDGET_HEIGHT)
 	{
-		pos.y = FRIEND_SIZE/2;
+		pos.y = FRIEND_SIZE/2 + WIDGET_HEIGHT;
 	}
 	else if(pos.y > SCREEN_HEIGHT - FRIEND_SIZE/2)
 	{
@@ -51,26 +53,12 @@ void GameController::normalizePos(Entity *pEntity)
 }
 
 /*
-** 设置游戏的主角
-*/
-void GameController::setPlayer(Friend *pPlayer)
-{
-	mPlayer = pPlayer;
-	mAttackingEntity = pPlayer;
-	pPlayer->setActive(true);
-	mEntityVec.push_back(pPlayer);
-}
-
-/*
 ** 加入一个友军
 */
 void GameController::addFriend(Friend *pFriend)
 {
-	if(pFriend != mPlayer)
-	{
-		mFriendVec.push_back(pFriend);
-		mEntityVec.push_back(pFriend);
-	}
+	mFriendVec.push_back(pFriend);
+	mEntityVec.push_back(pFriend);
 }
 
 /*
@@ -99,31 +87,36 @@ Friend *GameController::conflictWithFriend(Friend *collider)
 			return mFriendVec[i];
 	}
 
-	if(collider != mPlayer)
-	{
-		CCPoint pos2 = mPlayer->getTagPosition();
-		CCPoint dist = pos2 - pos;
-		if(ccpLength(dist) <= FRIEND_SIZE)
-			return mPlayer;
-	}
-
 	return NULL;
 }
 
 /*
-** 判断collider是否和场景中的怪物敌人有碰撞发生，如果有则返回该敌人的坐标，否则返回NULL
+** 判断collider是否和场景中的怪物敌人有碰撞发生，如果有则返回该敌人，否则返回NULL
 */
 Enermy *GameController::conflictWithEnermy(Friend *collider)
 {
+	static bool flag = false;
 	CCPoint pos = collider->getTagPosition();
 
 	for(int i=0; i<mEnermyVec.size(); ++i)
 	{
 		if(mEnermyVec[i]->dead()) continue;
+	
 		CCPoint pos2 = mEnermyVec[i]->getTagPosition();
 		CCPoint dist = pos2 - pos;
+
 		if(ccpLength(dist) <= FRIEND_SIZE)
+		{
 			return mEnermyVec[i];
+		}
+	}
+	if(flag == false)
+	{
+		for(int i=0; i<mEnermyVec.size(); ++i)
+		{
+			CCPoint pos = mEnermyVec[i]->getTagPosition();
+		}
+		flag = true;
 	}
 	return NULL;
 }
@@ -141,7 +134,7 @@ bool GameController::conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNo
 		wallNormal.x = 1;
 		wallNormal.y = 0;
 	}
-	else if(pos.y < FRIEND_SIZE/2)
+	else if(pos.y < FRIEND_SIZE/2+WIDGET_HEIGHT)
 	{
 		wallNormal.x = 0;
 		wallNormal.y = 1;
@@ -162,6 +155,18 @@ bool GameController::conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNo
 	return ret;
 }
 
+void GameController::setAttackingEntity(Entity *pEntity)
+{
+	mAttackingEntity = pEntity;
+	mAttackingEntity->setActive(true);
+
+	// 新一轮攻击开始，触发标志位复位
+	for(int i=0; i<mFriendVec.size(); ++i)
+	{
+		mFriendVec[i]->setTiggleFlag(false);
+	}
+}
+
 /*
 ** pAttackingEntity当前的攻击过程结束
 ** 此过程的判断较为复杂：
@@ -173,7 +178,23 @@ bool GameController::conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNo
 */
 void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 {
+	if(mAttackingFriendCnt > 0) return;
+
 	// 1 游戏结束
+	bool endFlag = true;
+	for(int i=0; i<mFriendVec.size(); ++i)
+	{
+		if(mFriendVec[i]->dead() == false)
+		{
+			endFlag = false;
+			break;
+		}
+	}
+	if(true == endFlag)
+	{
+	}
+
+
 	// 2 进入下一个关卡
 	bool isAllEnermyDead = true;
 	for(int i=0; i<mEnermyVec.size(); ++i)
@@ -181,16 +202,22 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 		if(mEnermyVec[i]->dead() == false)
 		{
 			isAllEnermyDead = false;
+			break;
 		}
 	}
+
 	if(true == isAllEnermyDead)
 	{
-		CCScene *pScene = WinScene::scene();
-		CCDirector::sharedDirector()->replaceScene(pScene);
+		GameScene *pParentScene = dynamic_cast<GameScene*>(getParent());
+
+		if(NULL != pParentScene)
+		{
+			pParentScene->increaseLevel();
+			return;
+		}
 	}
 
 	// 3 选择下一个Entity进入攻击状态
-	if(mAttackingFriendCnt > 0) return;
 	int index = 0;
 	for(int i=0; i<mEntityVec.size(); ++i)
 	{
@@ -212,7 +239,7 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 	{
 		mIsAttacking = false;
 	}
-
+	
 	// 新一轮攻击开始，触发标志位复位
 	for(int i=0; i<mFriendVec.size(); ++i)
 	{
@@ -224,6 +251,7 @@ void  GameController::addAttackingFriend()
 {
 	++mAttackingFriendCnt;
 }
+
 void  GameController::removeAttackingFriend()
 {
 	--mAttackingFriendCnt;
@@ -236,14 +264,7 @@ void  GameController::removeAttackingFriend()
 */
 void  GameController::friendsAttacked(int hp)
 {
-	// TODO:首先要判断主角是否已经死亡，若主角死亡则直接调用结束场景
-	mPlayer->underAttack(hp);
-	if(mPlayer->dead())
-	{
-		//弹出死亡界面
-	}
-
-	// 对其他友军执行伤害动作
+	// 对友军执行伤害动作
 	for(int i=0; i<mFriendVec.size(); ++i)
 	{
 		if(mFriendVec[i]->dead() == false)
@@ -251,15 +272,32 @@ void  GameController::friendsAttacked(int hp)
 			mFriendVec[i]->underAttack(hp);
 		}
 	}
+	
+	bool endFlag = true;
+	for(int i=0; i<mFriendVec.size(); ++i)
+	{
+		if(mEnermyVec[i]->dead() == false)
+		{
+			endFlag = false;
+			break;
+		}
+	}
+	if(true == endFlag)
+	{
+		// TODO:首先要判断主角是否已经死亡，若主角死亡则直接调用结束场景
+	}
 }
 
 /*
-**
+** 如果pEnermy不为空，则调用pEnermy的underAttack方法受到攻击
+** 如果pEnermy为空，则对所有的pEnermy调用underAttack方法
 */
 void GameController::enermyAttacked(Enermy *pEnermy, int hp)
 {
-	if(pEnermy != NULL)
+	if(pEnermy != NULL && pEnermy->dead() == false)
+	{
 		pEnermy->underAttack(hp);
+	}
 	else
 	{
 		for(unsigned i=0; i<mEnermyVec.size(); ++i)
@@ -269,6 +307,38 @@ void GameController::enermyAttacked(Enermy *pEnermy, int hp)
 				mEnermyVec[i]->underAttack(hp);
 			}
 		}
+	}
+}
+
+/*
+** 清除当前局的所有Enermy
+*/
+void GameController::clearEnermy()
+{
+	mEnermyVec.clear();
+}
+
+/*
+** 重置新关卡
+*/
+void GameController::resetNewLevel()
+{
+	for(int i=0; i<mFriendVec.size(); ++i)
+	{
+		if(mFriendVec[i]->dead() == false)
+		{
+			mAttackingEntity = mFriendVec[i];
+		}
+	}
+
+	mAttackingEntity->setActive(true);
+	mIsAttacking = false;
+
+	// 新一轮攻击开始，触发标志位复位
+	for(int i=0; i<mFriendVec.size(); ++i)
+	{
+		mFriendVec[i]->setTiggleFlag(false);
+		mFriendVec[i]->setActive(false);
 	}
 }
 
@@ -283,6 +353,7 @@ bool GameController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 	touchPos = CCDirector::sharedDirector()->convertToGL(touchPos);
 	mTouchBeginPos = touchPos;
 
+	if(mTouchBeginPos.y < WIDGET_HEIGHT) return true;
 	//TODO: 判断当前是哪个选手在进行攻击，并且创建箭头
 	mpArrowSprite = CCSprite::create("arrow.png");
 	//mpArrowSprite->setScaleX(2.0f);
@@ -292,10 +363,10 @@ bool GameController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 	return true;
 }
 
-float _calcAttackTime(CCPoint delta)
+float _calcRatio(CCPoint delta)
 {
 	CCPoint max = CCPoint(SCREEN_WIDTH, SCREEN_HEIGHT);
-	return MAX_LIFE_TIME*delta.getLength()/max.getLength();
+	return delta.getLength()/max.getLength();
 }
 
 /*
@@ -304,6 +375,7 @@ float _calcAttackTime(CCPoint delta)
 void GameController::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
 {
 	if(mIsAttacking) return;
+	if(mpArrowSprite == NULL) return;
 
 	// 获取坐标
 	CCPoint touchPos = pTouch->getLocationInView();
@@ -313,20 +385,22 @@ void GameController::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
 	//TODO:改变箭头方向 
 	CCPoint delta = mTouchBeginPos - touchPos;
 	float angle = delta.getAngle(CCPoint(1,0));
-	float attacktime = _calcAttackTime(delta);
+	float ratio = _calcRatio(delta);
 	if(mpArrowSprite)
 	{
 		mpArrowSprite->setRotation(angle*180/M_PI);
-		mpArrowSprite->setScaleX(attacktime+1);
+		mpArrowSprite->setScaleX(3*ratio+1);
 	}
 }
 
 void GameController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 {
 	if(mIsAttacking) return;
+	if(mpArrowSprite == NULL) return;
 
 	Friend *pAttackingFriend = dynamic_cast<Friend*>(mAttackingEntity);
 	if(pAttackingFriend == NULL) return;
+
 	// 释放箭头
 	if(mpArrowSprite != NULL)
 	{
@@ -335,14 +409,11 @@ void GameController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 	}
 
 	CCPoint dir = mTouchBeginPos - mTouchEndPos;
-	float attacktime = _calcAttackTime(dir);
-	CCPoint temp = dir.normalize();
-
-	mAttackingEntity->setAttackSpeed(attacktime*temp.x*UNIT_VELOCITY, attacktime*temp.y*UNIT_VELOCITY);
-	pAttackingFriend->setAttackTime(attacktime);
-	mAttackingEntity->attack();
-	
-	CCLOG("time:%f\n", 0.01f * dir.getLength());
+	float ratio = _calcRatio(dir);
+	dir = dir.normalize();
+	pAttackingFriend->setAttackSpeed(dir.x*ATTACK_SPEED*ratio,dir.y*ATTACK_SPEED*ratio);
+	pAttackingFriend->setAttackTime(FRIEND_ATTACK_TIME);
+	pAttackingFriend->attack();
 
 	mIsAttacking = true;
 }

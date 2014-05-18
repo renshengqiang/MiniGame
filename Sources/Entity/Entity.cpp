@@ -36,6 +36,7 @@ void Entity::setHp(int hp)
 	if(m_hpSlider != NULL)
 	{
 		m_hpSlider->setMaximumValue(hp);
+		m_hpSlider->setValue(m_hp);
 	}
 }
 
@@ -60,7 +61,7 @@ void Entity::underAttack(int hp)
 	CCNode::addChild(pFlowWord);
 	pFlowWord->showWord(str, m_sprite->getPosition());
 
-	// TODO:血量条要进行更新
+	// 血量条要更新
 	if(m_hpSlider != NULL)
 	{
 		m_hpSlider->setValue(m_hp);
@@ -74,28 +75,6 @@ void Entity::setActive(bool active)
 
 void Entity::update(float delta)
 {
-	if(m_activated)		// 随机晃动一个距离
-	{
-		m_magicTime += delta;
-		if(NULL == m_magicSprite)
-		{
-			m_magicSprite = CCSprite::create("magic.png");
-			CCNode::addChild(m_magicSprite);
-		}
-		else
-		{
-			m_magicSprite->setRotation(m_magicTime*180);
-		}
-	}
-	else
-	{
-		if(m_magicSprite != NULL)
-		{
-			m_magicSprite->getParent()->removeChild(m_magicSprite, true);
-			m_magicSprite = NULL;
-			m_magicTime = 0;
-		}
-	}
 }
 
 void Entity::setController(GameController *controller)

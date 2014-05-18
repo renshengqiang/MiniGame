@@ -28,7 +28,7 @@ bool LoginScene::init()
     {
         return false;
     }
-    
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("dota.mp3", true);
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
     CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 

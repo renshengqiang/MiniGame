@@ -13,9 +13,15 @@ Friend::Friend(const char *fileName)
 	mySpeed = 0;
 	mLastConflictedEntity = NULL;
 	mTriggleFlag = false;
+	mParticleSystem = NULL;
+	mLevel = 0;
 
 	CCSprite *sprite = CCSprite::create(fileName);
 	bindSprite(sprite);
+
+	mWeapon[0] = CCSprite::create("weapon1.png");
+	mWeapon[1] = CCSprite::create("weapon2.png");
+	mWeapon[2] = CCSprite::create("weapon3.png");
 }
 
 void Friend::bindSprite(cocos2d::CCSprite *sprite)
@@ -27,7 +33,7 @@ void Friend::bindSprite(cocos2d::CCSprite *sprite)
 							CCSprite::create("progress_friend.png"),
 							CCSprite::create("sliderThumb.png"));
 	
-	m_hpSlider->setPosition(ccp(0,FRIEND_SIZE));
+	m_hpSlider->setPosition(ccp(0,FRIEND_SIZE*0.75));
 	m_hpSlider->setTouchEnabled(false);
 	m_hpSlider->setMaximumValue(m_fullHp);
 	m_hpSlider->setMinimumValue(0);
@@ -35,27 +41,69 @@ void Friend::bindSprite(cocos2d::CCSprite *sprite)
 	Entity::addChild(m_hpSlider, 0);
 }
 
+void Friend::setAttackSpeed(float x, float y) 
+{
+	mxSpeed = x;
+	mySpeed = y;
+	mAcceleration = CCPoint(x,y).getLength()/FRIEND_ATTACK_TIME;	//保证最后的速度是原来的一半
+}
 void Friend::setController(GameController *controller)
 {
 	Entity::setController(controller);
 
 	// 具体的通知controller的函数不一样
 	controller->addFriend(this);
+
+	// 创建三种武器，需要setController在addChild后执行
+	for(int i=0; i<3; ++i)
+	{
+		getParent()->addChild(mWeapon[i], 0);
+		mWeapon[i]->setVisible(false);
+	}
 }
 
 void Friend::update(float delta)
 {
-	Entity::update(delta);
+	// 展示光环效果
+	if(m_activated)
+	{
+		m_magicTime += delta;
+		if(NULL == m_magicSprite)
+		{
+			m_magicSprite = CCSprite::create("magic.png");
+			m_magicSprite->setScale(0.25);
+			m_magicSprite->setPosition(CCNode::getPosition());
+			CCNode::getParent()->addChild(m_magicSprite, 1);		//放在英雄下面
+		}
+		else
+		{
+			m_magicSprite->setRotation(m_magicTime*180);
+		}
+	}
+	else
+	{
+		if(m_magicSprite != NULL)
+		{
+			m_magicSprite->getParent()->removeChild(m_magicSprite, true);
+			m_magicSprite = NULL;
+			m_magicTime = 0;
+		}
+	}
 
+	// 普通攻击效果
 	if(m_attacking)
 	{
 		CCPoint dest = Entity::getTagPosition();
+		float ratio = (CCPoint(mxSpeed, mySpeed).getLength() -delta* mAcceleration)/CCPoint(mxSpeed, mySpeed).getLength();
 		dest.x += mxSpeed * delta;
 		dest.y += mySpeed * delta;
+		mxSpeed *= ratio;
+		mySpeed *= ratio;
+		CCLOG("speed %f %f %f\n", CCPoint(mxSpeed, mySpeed).getLength(), mxSpeed, mySpeed);
 		Entity::setTagPosition(dest.x, dest.y);
+		mWeapon[mLevel-1]->setPosition(ccp(dest.x, dest.y));
 
 		mAttackTimeLeft -= delta;
-
 		if(NULL == m_controller) 
 		{
 			m_attacking = false;
@@ -64,9 +112,8 @@ void Friend::update(float delta)
 
 		if(mAttackTimeLeft <= 0)
 		{
-			m_attacking = false;
-			m_activated = false;
-			m_controller->leaveFromAttacking(this);
+			attackEnd();
+			return;
 		}
 
 		Friend *pConflictedFriend = m_controller->conflictWithFriend(this);
@@ -140,28 +187,41 @@ void Friend::attack()
 	m_attacking = true;
 	m_activated = false;
 	mLastConflictedEntity = NULL;
+
+	this->setVisible(false);
+	mWeapon[mLevel-1]->setPosition(getPosition());
+	mWeapon[mLevel-1]->setVisible(true);
+}
+
+void Friend::attackEnd()
+{
+	m_attacking = false;
+	m_activated = false;
+	m_controller->leaveFromAttacking(this);
+
+	for(int i=0; i<3; ++i)
+	{
+		mWeapon[i]->setVisible(false);
+	}
+	this->setVisible(true);
 }
 
 void Friend::attack2()
 {
 	if(mTriggleFlag == false)
-	{
+	{	
 		// TODO:释放友情技能
-		////创建CCParticleExplosion特效
-		CCParticleSystem * p1=CCParticleExplosion::create();
-		p1->setDuration(ENERMY_ATTACK_TIME);
-		p1->setLife(ENERMY_ATTACK_TIME);
-		p1->setSpeed(p1->getSpeed() * 4);
+		mParticleSystem = CCParticleFireworks::create();
+		mParticleSystem->setDuration(ENERMY_ATTACK_TIME);
+		mParticleSystem->setLife(ENERMY_ATTACK_TIME);
+		mParticleSystem->setSpeed(mParticleSystem->getSpeed() * 4);
+		mParticleSystem->setTexture(CCTextureCache::sharedTextureCache()->addImage("friend_particle.png"));
 		//设置特效贴图
-		p1->setTexture(CCTextureCache::sharedTextureCache()->addImage("friend_particle.png"));
-		//设置自动释放
-		p1->setAutoRemoveOnFinish(true);
-		//设置移动类型
-		p1->setPositionType(kCCPositionTypeGrouped);
+		mParticleSystem->setTexture(CCTextureCache::sharedTextureCache()->addImage("stars.png"));
 		//设置位置
-		p1->setPosition(ccp(0, 0));
+		mParticleSystem->setPosition(ccp(0, 0));
 		//添加特效
-		this->addChild(p1);
+		this->addChild(mParticleSystem);
 		// 通知controller多了一个攻击者
 		m_controller->addAttackingFriend();
 		// 然后创建一个定时任务，爆炸结束后通知controller对友军进行伤害，然后到下一个继续执行
@@ -176,6 +236,8 @@ void Friend::attack2End(float)
 	// controller在收到该通知后才能继续选择下一个攻击的选手
 	m_controller->enermyAttacked(NULL, mAttack2Hurt);
 	m_controller->removeAttackingFriend();
+	mParticleSystem->getParent()->removeChild(mParticleSystem);
+	mParticleSystem = NULL;
 }
 /*
 ** 受到攻击，先执行Entity的扣血
@@ -187,6 +249,11 @@ void Friend::underAttack(int hp)
 	if(m_hp < hp) hp = m_hp;
 	Entity::underAttack(hp);
 
+	CCActionInterval *shaky3DFX = CCShaky3D::create(0.5, CCSizeMake(15, 10), 5, false);
+	CCStopGrid *stopGrid = CCStopGrid::create();
+	CCSequence *action = CCSequence::create(shaky3DFX, stopGrid, NULL);
+	this->runAction(action);
+
 	if(dead())
 	{
 		scheduleOnce(schedule_selector(Friend::die), DIE_TIME);
@@ -197,4 +264,27 @@ void Friend::underAttack(int hp)
 void Friend::die(float)
 {
 	setVisible(false);
+}
+
+void Friend::increaseLevel()
+{
+	switch(mLevel)
+	{
+	case 0:
+		mAttack1Hurt = 15;
+		mAttack2Hurt = 10;
+		setHp(150);
+		break;
+	case 1:
+		mAttack1Hurt = 45;
+		mAttack2Hurt = 100;
+		setHp(400);
+		break;
+	case 2:
+		mAttack1Hurt = 200;
+		mAttack2Hurt = 200;
+		setHp(700);
+		break;
+	}
+	mLevel++;
 }

@@ -12,7 +12,7 @@ FlowWord::~FlowWord(void)
 
 bool FlowWord::init() 
 {
-	m_textLab = CCLabelTTF::create("", "Arial", 35);
+	m_textLab = CCLabelTTF::create("", "Arial", 50);
 	m_textLab->setColor(ccc3(255, 0, 0));
 	m_textLab->setAnchorPoint(ccp(1, 0));
 	m_textLab->setVisible(false);

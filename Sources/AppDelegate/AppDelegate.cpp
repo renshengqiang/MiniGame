@@ -1,5 +1,6 @@
 #include "AppDelegate.h"
 #include "Scenes/LoginScene.h"
+#include "Scenes/GameScene.h"
 #include <cocos2d.h>
 
 USING_NS_CC;

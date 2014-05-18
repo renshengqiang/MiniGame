@@ -15,7 +15,6 @@ public:
 
 	void normalizePos(Entity *pEntity);
 
-	void setPlayer(Friend *pPlayer);
 	void addFriend(Friend *pFriend);
 	void addEnermy(Enermy *pEnermy);
 
@@ -31,6 +30,8 @@ public:
 	void friendsAttacked(int hp);
 	void enermyAttacked(Enermy *pEnermy, int hp);
 
+	void clearEnermy();
+	void resetNewLevel();
 	// 触屏事件处理函数
 	virtual void registerWithTouchDispatcher();
 	virtual bool ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
@@ -38,7 +39,6 @@ public:
 	virtual void ccTouchEnded(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
 
 protected:
-	Friend *mPlayer;						// 主角
 	std::vector<Friend*> mFriendVec;		// 友军们
 	std::vector<Enermy*> mEnermyVec;		// 敌人们
 	std::vector<Entity*> mEntityVec;		// 所有参与的Entities

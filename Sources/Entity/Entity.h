@@ -5,6 +5,7 @@
 #include "Controller/ControllerListener.h"
 
 class GameController;
+class CCParticleSystem;
 class Entity : public cocos2d::CCNode, public ControllerListener
 {
 public:
@@ -41,6 +42,7 @@ protected:
 	bool m_activated;				// 当前Entity是否是激活待发射武器的
 	bool m_attacking;				// 当前自己是否是攻击者
 	bool m_autoAttack;				// 是否是主动攻击对象
+	cocos2d::CCParticleSystem *m_particleSystem;	//攻击特效
 
 	bool flag;						// 临时变量，用于对当前活跃对象进行闪烁
 };
