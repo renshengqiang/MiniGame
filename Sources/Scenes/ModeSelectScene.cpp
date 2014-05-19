@@ -38,8 +38,8 @@ bool ModeSelectScene::init()
     //    you may modify it.
 
 	 CCMenuItemImage *pEnterItem_WX = CCMenuItemImage::create(
-                                        "无尽模式.png",
-                                        "无尽模式已选.png",
+                                        "InfMode.png",
+                                        "InfModeSel.png",
                                         this,
                                         menu_selector(ModeSelectScene::changescene));
     
@@ -52,8 +52,8 @@ bool ModeSelectScene::init()
     this->addChild(pMenu_WX, 1);
 
 	CCMenuItemImage *pEnterItem_QQ = CCMenuItemImage::create(
-                                        "故事模式.png",
-                                        "故事模式已选.png",
+                                        "StoryMode.png",
+                                        "StoryModeSel.png",
                                         this,
                                         menu_selector(ModeSelectScene::changescene));
     
@@ -70,25 +70,25 @@ bool ModeSelectScene::init()
 
 	
 	CCSize mysize=CCDirector::sharedDirector()->getWinSize();
-	CCSprite* sp = CCSprite::create("模式选择.png");
+	CCSprite* sp = CCSprite::create("ModelSelect.png");
 	sp->setPosition(ccp(mysize.width/2, mysize.height/2));
 	//设置不同颜色区分
 	sp->setColor(ccc3(100,100,100));
 	this->addChild(sp, 0);
 
-	CCSprite* sp1 = CCSprite::create("原始人.png");
+	CCSprite* sp1 = CCSprite::create("Primitve.png");
 	sp1->setPosition(ccp(mysize.width/2-154, mysize.height/2+200));
 	this->addChild(sp1, 2);
 
-	CCSprite* sp2 = CCSprite::create("现代人.png");
+	CCSprite* sp2 = CCSprite::create("Modern.png");
 	sp2->setPosition(ccp(mysize.width/2, mysize.height/2+200));
 	this->addChild(sp2, 2);
 
-	CCSprite* sp3 = CCSprite::create("科幻人.png");
+	CCSprite* sp3 = CCSprite::create("ScieneFiction.png");
 	sp3->setPosition(ccp(mysize.width/2+154, mysize.height/2+200));
 	this->addChild(sp3, 2);
 
-	CCSprite* sp4 = CCSprite::create("英雄志.png");
+	CCSprite* sp4 = CCSprite::create("HeroChi.png");
 	sp4->setPosition(ccp(mysize.width/2, mysize.height/2));
 	this->addChild(sp4, 2);
     

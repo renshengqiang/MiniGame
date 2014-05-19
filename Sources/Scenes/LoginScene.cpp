@@ -54,8 +54,8 @@ bool LoginScene::init()
 	*/
 
 	 CCMenuItemImage *pEnterItem_WX = CCMenuItemImage::create(
-                                        "Î¢ÐÅµÇÂ¼.png",
-                                        "Î¢ÐÅµÇÂ¼Ñ¡ÖÐ.png",
+                                        "WXLogin.png",
+                                        "WXLoginSelected.png",
                                         this,
                                         menu_selector(LoginScene::changescene));
     
@@ -68,8 +68,8 @@ bool LoginScene::init()
     this->addChild(pMenu_WX, 1);
 
 	CCMenuItemImage *pEnterItem_QQ = CCMenuItemImage::create(
-                                        "QQµÇÂ¼.png",
-                                        "QQµÇÂ¼Ñ¡ÖÐ.png",
+                                        "QQLogin.png",
+                                        "QQLoginSelected.png",
                                         this,
                                         menu_selector(LoginScene::changescene));
     
@@ -84,7 +84,7 @@ bool LoginScene::init()
     // 3. add your codes below...
 
     // add "HelloWorld" splash screen"
-    CCSprite* pSprite = CCSprite::create("µÇÂ¼±³¾°.png");
+    CCSprite* pSprite = CCSprite::create("LoginBG.png");
 
     // position the sprite on the center of the screen
     pSprite->setPosition(ccp(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));

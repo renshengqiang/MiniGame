@@ -38,8 +38,8 @@ bool HeroIntroScene::init()
     //    you may modify it.
 
 	 CCMenuItemImage *pEnterItem_WX = CCMenuItemImage::create(
-                                        "升级按钮.png",
-                                        "升级已选.png",
+                                        "Upgrade.png",
+                                        "UpgradeSel.png",
                                         this,
                                         0);
     
@@ -52,8 +52,8 @@ bool HeroIntroScene::init()
     this->addChild(pMenu_WX, 1);
 
 	CCMenuItemImage *pEnterItem_QQ = CCMenuItemImage::create(
-                                        "进化按钮.png",
-                                        "进化已选.png",
+                                        "Evolution.png",
+                                        "EvolutionSel.png",	
                                         this,
                                          menu_selector(HeroIntroScene::changescene));
     
@@ -65,8 +65,8 @@ bool HeroIntroScene::init()
     this->addChild(pMenu_QQ, 1);
 
 	 CCMenuItemImage *pEnterItem1 = CCMenuItemImage::create(
-                                        "出战按钮.png",
-                                        "出战已选.png",
+                                        "Fight.png",
+                                        "FightSel.png",
                                         this,
                                         menu_selector(HeroIntroScene::changescene));
     
@@ -79,8 +79,8 @@ bool HeroIntroScene::init()
     this->addChild(pMenu1, 1);
 
 	CCMenuItemImage *pEnterItem2 = CCMenuItemImage::create(
-                                        "返回按钮.png",
-                                        "返回已选.png",
+                                        "Return.png",
+                                        "ReturnSel.png",
                                         this,
                                         menu_selector(HeroIntroScene::changescene_return));
     
@@ -93,8 +93,8 @@ bool HeroIntroScene::init()
     this->addChild(pMenu2, 1);
 
 	 CCMenuItemImage *pEnterItem3 = CCMenuItemImage::create(
-                                        "左箭头.png",
-                                        "左箭头.png",
+                                        "LeftArrow.png",
+                                        "LeftArrow.png",
                                         this,
                                         menu_selector(HeroIntroScene::changescene_left));
     
@@ -107,8 +107,8 @@ bool HeroIntroScene::init()
     this->addChild(pMenu3, 1);
 
 	CCMenuItemImage *pEnterItem4 = CCMenuItemImage::create(
-                                        "右箭头.png",
-                                        "右箭头.png",
+                                        "RightArrow.png",
+                                        "RightArrow.png",
                                         this,
                                         menu_selector(HeroIntroScene::changescene_right));
     
@@ -123,25 +123,25 @@ bool HeroIntroScene::init()
     /////////////////////////////
     // 3. add your codes below...
 	CCSize mysize=CCDirector::sharedDirector()->getWinSize();
-	CCSprite* sp = CCSprite::create("英雄介绍背景.png");
+	CCSprite* sp = CCSprite::create("HeroIntroBG.png");
 	sp->setPosition(ccp(mysize.width/2, mysize.height/2));
 	//设置不同颜色区分
 	sp->setColor(ccc3(100,100,100));
 	this->addChild(sp, 0);
 
-	CCSprite* sp1 = CCSprite::create("长矛原始人1.png");
+	CCSprite* sp1 = CCSprite::create("CMPrimitive.png");
 	sp1->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 	this->addChild(sp1, 2);
 
-	CCSprite* sp5 = CCSprite::create("原始人头像.png");
+	CCSprite* sp5 = CCSprite::create("PrimitiveHead.png");
 	sp5->setPosition(ccp(mysize.width/2-154, mysize.height/2+400));
 	this->addChild(sp5, 0);
 
-	CCSprite* sp6 = CCSprite::create("现代人头像.png");
+	CCSprite* sp6 = CCSprite::create("ModernHead.png");
 	sp6->setPosition(ccp(mysize.width/2, mysize.height/2+400));
 	this->addChild(sp6, 0);
 
-	CCSprite* sp7 = CCSprite::create("科幻人头像.png");
+	CCSprite* sp7 = CCSprite::create("ModernFictionHead.png");
 	sp7->setPosition(ccp(mysize.width/2+154, mysize.height/2+400));
 	this->addChild(sp7, 0);
 
@@ -169,28 +169,28 @@ void HeroIntroScene::changescene_left(CCObject* pSender){
 	switch(m){
 	case 0:
 		{
-			CCSprite* sp1 = CCSprite::create("长矛原始人1.png");
+			CCSprite* sp1 = CCSprite::create("CMPrimitive1.png");
 			sp1->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp1, 2);
 			break;
 		}
 	case 1:
 		{
-			CCSprite* sp2 = CCSprite::create("科学原始人2.png");
+			CCSprite* sp2 = CCSprite::create("Science2.png");
 			sp2->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp2, 2);
 			break;
 		}
 	case 2:
 		{
-			CCSprite* sp3 = CCSprite::create("光之原始人3.png");
+			CCSprite* sp3 = CCSprite::create("Sivel3.png");
 			sp3->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp3, 2);
 			break;
 		}
 	case 3:
 		{
-			CCSprite* sp4 = CCSprite::create("鸟之原始人4.png");
+			CCSprite* sp4 = CCSprite::create("Bird4.png");
 			sp4->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp4, 2);
 		}
@@ -206,28 +206,28 @@ void HeroIntroScene::changescene_right(CCObject* pSender){
 	switch(m){
 	case 0:
 		{
-			CCSprite* sp1 = CCSprite::create("长矛原始人1.png");
+			CCSprite* sp1 = CCSprite::create("CMPrititive1.png");
 			sp1->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp1, 2);
 			break;
 		}
 	case 1:
 		{
-			CCSprite* sp2 = CCSprite::create("科学原始人2.png");
+			CCSprite* sp2 = CCSprite::create("Science2.png");
 			sp2->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp2, 2);
 			break;
 		}
 	case 2:
 		{
-			CCSprite* sp3 = CCSprite::create("光之原始人3.png");
+			CCSprite* sp3 = CCSprite::create("Sivel3.png");
 			sp3->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp3, 2);
 			break;
 		}
 	case 3:
 		{
-			CCSprite* sp4 = CCSprite::create("鸟之原始人4.png");
+			CCSprite* sp4 = CCSprite::create("Bird4.png");
 			sp4->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp4, 2);
 			break;

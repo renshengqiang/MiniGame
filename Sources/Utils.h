@@ -5,7 +5,7 @@ const int FRIEND_SIZE = 100;
 const int BOSS_SIZE = 150;
 
 const int SCREEN_WIDTH = 720;
-const int SCREEN_HEIGHT = 900;
+const int SCREEN_HEIGHT = 1280;
 
 const int FULL_HEALTH = 100;
 const int ATTACK_SPEED = 2500;
