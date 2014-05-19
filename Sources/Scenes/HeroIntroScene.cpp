@@ -163,8 +163,8 @@ void HeroIntroScene::changescene_return(CCObject* pSender){
 }
 
 void HeroIntroScene::changescene_left(CCObject* pSender){
-	index--;
-	int m=abs(index%MAX_Heros);
+	SelectedMark--;
+	int m=abs(SelectedMark%MAX_Heros);
 	CCSize mysize=CCDirector::sharedDirector()->getWinSize();
 	switch(m){
 	case 0:
@@ -200,8 +200,8 @@ void HeroIntroScene::changescene_left(CCObject* pSender){
 }
 
 void HeroIntroScene::changescene_right(CCObject* pSender){
-	index++;
-	int m=abs(index%MAX_Heros);
+	SelectedMark++;
+	int m=abs(SelectedMark%MAX_Heros);
 	CCSize mysize=CCDirector::sharedDirector()->getWinSize();
 	switch(m){
 	case 0:

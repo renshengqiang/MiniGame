@@ -6,7 +6,7 @@
 #include "SimpleAudioEngine.h"
 
 #define MAX_Heros 4
-static int index=0;
+static int SelectedMark=0;
 
 class HeroIntroScene : public cocos2d::CCLayer
 {
