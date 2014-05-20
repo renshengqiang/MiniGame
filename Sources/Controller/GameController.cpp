@@ -7,6 +7,12 @@
 
 USING_NS_CC;
 
+float _calcRatio(cocos2d::CCPoint delta)
+{
+	cocos2d::CCPoint max = cocos2d::CCPoint(SCREEN_WIDTH, SCREEN_HEIGHT);
+	return delta.getLength()/max.getLength();
+}
+
 bool GameController::init()
 {
 
@@ -17,6 +23,7 @@ bool GameController::init()
 	mIsAttacking = false;
 	mAttackingFriendCnt = 0;
 	mpArrowSprite = NULL;
+	mIsFingerDown = false;
 	return true;
 }
 
@@ -68,6 +75,22 @@ void GameController::addEnermy(Enermy *pEnermy)
 {
 	mEnermyVec.push_back(pEnermy);
 	mEntityVec.push_back(pEnermy);
+}
+
+/*
+** 获取一个受攻击的友军
+** 可以确定肯定可以获取一个友军
+*/
+Friend *GameController::getOneAttackedFriend()
+{
+	cc_timeval psv;   
+	CCTime::gettimeofdayCocos2d( &psv, NULL );
+	unsigned int tsrans = psv.tv_sec * 1000 + psv.tv_usec / 1000;
+	unsigned int index = tsrans%3;
+	
+	if(mFriendVec[index]->dead() == false) index = (index+1)%3;
+	if(mFriendVec[index]->dead() == false) index = (index+1)%3;
+	return mFriendVec[index];
 }
 
 /*
@@ -262,14 +285,21 @@ void  GameController::removeAttackingFriend()
 ** 1. 如果主角死亡，则游戏结束；
 ** 2. 如果其他友军死亡则播放死亡特效，然后将其隐藏；
 */
-void  GameController::friendsAttacked(int hp)
+void  GameController::friendsAttacked(Friend *pFriend, int hp)
 {
 	// 对友军执行伤害动作
-	for(int i=0; i<mFriendVec.size(); ++i)
+	if(pFriend != NULL)
 	{
-		if(mFriendVec[i]->dead() == false)
+		pFriend->underAttack(hp);
+	}
+	else
+	{
+		for(int i=0; i<mFriendVec.size(); ++i)
 		{
-			mFriendVec[i]->underAttack(hp);
+			if(mFriendVec[i]->dead() == false)
+			{
+				mFriendVec[i]->underAttack(hp);
+			}
 		}
 	}
 	
@@ -348,6 +378,7 @@ void GameController::resetNewLevel()
 bool GameController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
 	if(mIsAttacking) return true;
+	if(mIsFingerDown) return true;
 	// 获取坐标
 	CCPoint touchPos = pTouch->getLocationInView();
 	touchPos = CCDirector::sharedDirector()->convertToGL(touchPos);
@@ -360,13 +391,8 @@ bool GameController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 	CCLayer::addChild(mpArrowSprite);
 	mpArrowSprite->setPosition(mAttackingEntity->getTagPosition());
 
+	mIsFingerDown = true;
 	return true;
-}
-
-float _calcRatio(CCPoint delta)
-{
-	CCPoint max = CCPoint(SCREEN_WIDTH, SCREEN_HEIGHT);
-	return delta.getLength()/max.getLength();
 }
 
 /*
@@ -416,6 +442,7 @@ void GameController::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent)
 	pAttackingFriend->attack();
 
 	mIsAttacking = true;
+	mIsFingerDown = false;
 }
 
 void GameController::registerWithTouchDispatcher()

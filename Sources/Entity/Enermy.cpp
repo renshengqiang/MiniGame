@@ -1,6 +1,7 @@
 #include "Enermy.h"
 #include "Controller\GameController.h"
 #include "Utils.h"
+#include "Friend.h"
 
 USING_NS_CC;
 using namespace cocos2d::extension;
@@ -36,33 +37,33 @@ void Enermy::attack()
 	switch(mType)
 	{
 	case 1:
+		scheduleOnce(schedule_selector(Enermy::attackTempEnd), 0.3*ENERMY_ATTACK_TIME);
+		break;
+	case 2:
 		m_particleSystem = CCParticleFlower::create();
-		m_particleSystem->setTexture( CCTextureCache::sharedTextureCache()->addImage("stars.png") );
+		m_particleSystem->setTexture( CCTextureCache::sharedTextureCache()->addImage("stars.png"));
 		m_particleSystem->setLifeVar(0);
 		m_particleSystem->setLife(ENERMY_ATTACK_TIME);
 		m_particleSystem->setSpeed(400);
 		m_particleSystem->setSpeedVar(0);
 		m_particleSystem->setEmissionRate(10000);
+		m_particleSystem->setPosition(ccp(0, 0));
+		this->addChild(m_particleSystem);
+		scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
 		break;
-	case 2:
-		m_particleSystem=CCParticleExplosion::create();
+	case 3:
+		m_particleSystem = CCParticleExplosion::create();
 		m_particleSystem->setDuration(ENERMY_ATTACK_TIME);
 		m_particleSystem->setLife(ENERMY_ATTACK_TIME);
 		m_particleSystem->setSpeed(m_particleSystem->getSpeed() * 4);
 		m_particleSystem->setTexture(CCTextureCache::sharedTextureCache()->addImage("boss_particle.png"));
 		m_particleSystem->setAutoRemoveOnFinish(true);
 		m_particleSystem->setPositionType(kCCPositionTypeGrouped);
-		break;
-	case 3:
-		m_particleSystem = new CCParticleSystemQuad();
-		m_particleSystem->initWithFile("SpookyPeas.plist");
+		m_particleSystem->setPosition(ccp(0, 0));
+		this->addChild(m_particleSystem);
+		scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
 		break;
 	}
-	m_particleSystem->setPosition(ccp(0, 0));
-	//添加特效
-	this->addChild(m_particleSystem);
-	// 然后创建一个定时任务，爆炸结束后通知controller对友军进行伤害，然后到下一个继续执行
-	scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
 }
 
 void Enermy::underAttack(int hp)
@@ -104,15 +105,43 @@ void Enermy::setController(GameController *controller)
 	controller->addEnermy(this);
 }
 
+void Enermy::attackTempEnd(float)
+{
+	mFXSprite = CCSprite::create("laser.png");
+	this->getParent()->addChild(mFXSprite);
+	mAttackedFriend = m_controller->getOneAttackedFriend();
+	CCPoint friendPos = mAttackedFriend->getPosition();
+	CCPoint pos = getPosition();
+	CCPoint centerPos = (friendPos + pos)*0.5;
+	mFXSprite->setPosition(centerPos);
+	mFXSprite->setScaleX(10);
+	CCPoint delta = friendPos - pos;
+	float angle = delta.getAngle(CCPoint(1,0));
+	if(mFXSprite)
+	{
+		mFXSprite->setRotation(180-angle*180/M_PI);
+	}
+	scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
+}
+
 void Enermy::attackEnd(float)
 {
 	// 通知controller对所有选手进行一次伤害
-	// TODO:优化伤害方式
-	m_activated = false;
-	m_controller->friendsAttacked(mAttackHurt);
-	m_controller->leaveFromAttacking(this);
-	m_particleSystem->getParent()->removeChild(m_particleSystem);
-	m_particleSystem = NULL;
+	if(1 == mType)
+	{
+		mFXSprite->getParent()->removeChild(mFXSprite);
+		mAttackedFriend->underAttack(mAttackHurt);
+		m_controller->friendsAttacked(mAttackedFriend, mAttackHurt);
+		m_controller->leaveFromAttacking(this);
+	}
+	else
+	{
+		m_activated = false;
+		m_controller->friendsAttacked(NULL, mAttackHurt);
+		m_controller->leaveFromAttacking(this);
+		m_particleSystem->getParent()->removeChild(m_particleSystem);
+		m_particleSystem = NULL;
+	}
 }
 
 void Enermy::die()

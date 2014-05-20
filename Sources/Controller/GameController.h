@@ -18,6 +18,7 @@ public:
 	void addFriend(Friend *pFriend);
 	void addEnermy(Enermy *pEnermy);
 
+	Friend *getOneAttackedFriend();
 	Friend *conflictWithFriend(Friend *collider);
 	Enermy *conflictWithEnermy(Friend *collider);
 	bool conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNormal);
@@ -27,7 +28,7 @@ public:
 	void addAttackingFriend();
 	void removeAttackingFriend();
 
-	void friendsAttacked(int hp);
+	void friendsAttacked(Friend *pFriend,int hp);
 	void enermyAttacked(Enermy *pEnermy, int hp);
 
 	void clearEnermy();
@@ -50,6 +51,7 @@ private:
 	cocos2d::CCPoint mTouchBeginPos, mTouchEndPos;
 	cocos2d::CCSprite *mpArrowSprite;
 	bool mIsAttacking;			// 当前是否已经在进行攻击
+	bool mIsFingerDown;			// 用于禁止多点触摸
 };
 
 #endif

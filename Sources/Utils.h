@@ -20,4 +20,5 @@ const float DIE_TIME = 1.0f;
 const float MAX_LIFE_TIME = 3.0f;
 
 const int WIDGET_HEIGHT = 143;
+
 #endif
