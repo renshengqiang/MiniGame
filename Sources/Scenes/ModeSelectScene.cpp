@@ -100,6 +100,7 @@ void ModeSelectScene::changescene(CCObject * obj){
 	CCScene * scene1=HeroIntroScene::scene();
 	CCTransitionScene * ss=CCTransitionCrossFade::create(1,scene1);
 	CCDirector::sharedDirector()->replaceScene(ss);
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
 }
 
 void ModeSelectScene::onEnter(){

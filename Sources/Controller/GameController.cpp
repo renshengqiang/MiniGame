@@ -4,6 +4,7 @@
 #include "Scenes\WinScene.h"
 #include "Scenes\GameScene.h"
 #include "Utils.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 
@@ -215,6 +216,8 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 	}
 	if(true == endFlag)
 	{
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("GameFail.mp3");
+		// TODO:µ¯³öÊ§°Ü½çÃæ
 	}
 
 

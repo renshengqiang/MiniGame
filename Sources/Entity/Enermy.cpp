@@ -1,7 +1,9 @@
 #include "Enermy.h"
 #include "Controller\GameController.h"
+#include "Effects\Laser.h"
 #include "Utils.h"
 #include "Friend.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 using namespace cocos2d::extension;
@@ -37,7 +39,16 @@ void Enermy::attack()
 	switch(mType)
 	{
 	case 1:
-		scheduleOnce(schedule_selector(Enermy::attackTempEnd), 0.3*ENERMY_ATTACK_TIME);
+		{
+			mAttackedFriend = m_controller->getOneAttackedFriend();
+			CCPoint friendPos = mAttackedFriend->getPosition();
+			Laser *pLaser = Laser::create();
+			this->addChild(pLaser);
+			pLaser->show(this->getPosition(), mAttackedFriend->getPosition());
+			mFXSprite = pLaser;
+			scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
+			//scheduleOnce(schedule_selector(Enermy::attackTempEnd), 0.3*ENERMY_ATTACK_TIME);
+		}
 		break;
 	case 2:
 		m_particleSystem = CCParticleFlower::create();
@@ -62,6 +73,8 @@ void Enermy::attack()
 		m_particleSystem->setPosition(ccp(0, 0));
 		this->addChild(m_particleSystem);
 		scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
+
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossSkill.mp3");
 		break;
 	}
 }
@@ -119,7 +132,7 @@ void Enermy::attackTempEnd(float)
 	float angle = delta.getAngle(CCPoint(1,0));
 	if(mFXSprite)
 	{
-		mFXSprite->setRotation(180-angle*180/M_PI);
+		mFXSprite->setRotation(angle*180/M_PI);
 	}
 	scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
 }
@@ -130,7 +143,6 @@ void Enermy::attackEnd(float)
 	if(1 == mType)
 	{
 		mFXSprite->getParent()->removeChild(mFXSprite);
-		mAttackedFriend->underAttack(mAttackHurt);
 		m_controller->friendsAttacked(mAttackedFriend, mAttackHurt);
 		m_controller->leaveFromAttacking(this);
 	}

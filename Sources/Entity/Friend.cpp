@@ -2,6 +2,7 @@
 #include "Enermy.h"
 #include "Controller\GameController.h"
 #include "Utils.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 using namespace cocos2d::extension;
@@ -71,7 +72,7 @@ void Friend::update(float delta)
 		if(NULL == m_magicSprite)
 		{
 			m_magicSprite = CCSprite::create("magic.png");
-			m_magicSprite->setScale(0.25);
+			m_magicSprite->setScale(0.3);
 			m_magicSprite->setPosition(CCNode::getPosition());
 			CCNode::getParent()->addChild(m_magicSprite, 1);		//放在英雄下面
 		}
@@ -99,9 +100,16 @@ void Friend::update(float delta)
 		dest.y += mySpeed * delta;
 		mxSpeed *= ratio;
 		mySpeed *= ratio;
-		CCLOG("speed %f %f %f\n", CCPoint(mxSpeed, mySpeed).getLength(), mxSpeed, mySpeed);
+
+		//CCLOG("speed %f %f %f\n", CCPoint(mxSpeed, mySpeed).getLength(), mxSpeed, mySpeed);
+		// 设置友军的新位置
 		Entity::setTagPosition(dest.x, dest.y);
 		mWeapon[mLevel-1]->setPosition(ccp(dest.x, dest.y));
+
+		// 设置友军攻击武器的旋转
+		float angle = CCPoint(mxSpeed, mySpeed).getAngle(CCPoint(1,0));
+		mWeapon[mLevel-1]->setRotation(angle*180/M_PI);
+		CCLOG("-----------angle: %f\n", angle);
 
 		mAttackTimeLeft -= delta;
 		if(NULL == m_controller) 
@@ -116,8 +124,14 @@ void Friend::update(float delta)
 			return;
 		}
 
+		// 和友军的碰撞只考虑友情技能，不考虑弹射
 		Friend *pConflictedFriend = m_controller->conflictWithFriend(this);
 		if(pConflictedFriend != NULL)
+		{
+			pConflictedFriend->attack2();
+		}
+/*
+		if(mLevel <= 2 && pConflictedFriend != NULL)
 		{
 			//简单改变原来运行的方向导致的问题是，如果已经发生重合则导致一直在周围进行旋转的情况发生
 			//解决方法之一是记录上一次冲突的对象，若这次冲突的对象相同则不进行方向改变
@@ -139,9 +153,14 @@ void Friend::update(float delta)
 		
 			return;
 		}
-		
+*/
+		// 等级大于等于三级的时候会进行穿透
 		Enermy *pConflictedEnermy = m_controller->conflictWithEnermy(this);
 		if(pConflictedEnermy != NULL)
+		{
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("Collide.mp3");
+		}
+		if(mLevel <= 2 && pConflictedEnermy != NULL)
 		{
 			if(mLastConflictedEntity == pConflictedEnermy) return;
 			mLastConflictedEntity = pConflictedEnermy;
@@ -156,10 +175,13 @@ void Friend::update(float delta)
 			reflectedVelocity.y = -2*(mxSpeed*normalVec.x + mySpeed*normalVec.y)*normalVec.y/(normalVec.getLength()*normalVec.getLength()) + originalVelocity.y;
 			setAttackSpeed(reflectedVelocity.x, reflectedVelocity.y);
 			
-			// TODO:这里需要判断当前在用哪种技能
-			pConflictedEnermy->underAttack(mAttack1Hurt);
+			m_controller->enermyAttacked(pConflictedEnermy, mAttack1Hurt);
 
 			return;
+		}
+		else if(pConflictedEnermy != NULL)
+		{
+			m_controller->enermyAttacked(pConflictedEnermy, mAttack1Hurt);
 		}
 
 		CCPoint normalVec;
@@ -191,6 +213,19 @@ void Friend::attack()
 	this->setVisible(false);
 	mWeapon[mLevel-1]->setPosition(getPosition());
 	mWeapon[mLevel-1]->setVisible(true);
+
+	switch(mLevel)
+	{
+	case 1:
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendArrow.wav");
+		break;
+	case 2:
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendMissle.wav");
+		break;
+	case 3:
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendFireball.wav");
+		break;
+	}
 }
 
 void Friend::attackEnd()
@@ -227,6 +262,18 @@ void Friend::attack2()
 		// 然后创建一个定时任务，爆炸结束后通知controller对友军进行伤害，然后到下一个继续执行
 		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
 		mTriggleFlag = true;
+	}
+	switch(mLevel)
+	{
+	case 1:
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExplode.wav");
+		break;
+	case 2:
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExpand.mp3");
+		break;
+	case 3:
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendLightBunch.mp3");
+		break;
 	}
 }
 

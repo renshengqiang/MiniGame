@@ -24,7 +24,7 @@ public:
 private:
 	int mAttackHurt;	// 技能伤害值
 	int mType;
-	cocos2d::CCSprite *mFXSprite;		//特效图片
+	cocos2d::CCNode *mFXSprite;		//特效图片
 	Friend *mAttackedFriend;	//被攻击的敌人
 };
 

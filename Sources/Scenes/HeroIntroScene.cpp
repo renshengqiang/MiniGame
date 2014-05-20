@@ -55,7 +55,7 @@ bool HeroIntroScene::init()
                                         "Evolution.png",
                                         "EvolutionSel.png",	
                                         this,
-                                         menu_selector(HeroIntroScene::changescene));
+                                        0);
     
 	pEnterItem_QQ->setPosition(ccp(origin.x + visibleSize.width/2+120,
                             origin.y + visibleSize.height/2-300));
@@ -129,21 +129,21 @@ bool HeroIntroScene::init()
 	sp->setColor(ccc3(100,100,100));
 	this->addChild(sp, 0);
 
-	CCSprite* sp1 = CCSprite::create("CMPrimitive.png");
-	sp1->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-	this->addChild(sp1, 2);
-
-	CCSprite* sp5 = CCSprite::create("PrimitiveHead.png");
+	CCSprite* sp5 = CCSprite::create("Widget1_1.png");
 	sp5->setPosition(ccp(mysize.width/2-154, mysize.height/2+400));
 	this->addChild(sp5, 0);
 
-	CCSprite* sp6 = CCSprite::create("ModernHead.png");
+	CCSprite* sp6 = CCSprite::create("Widget1_2.png");
 	sp6->setPosition(ccp(mysize.width/2, mysize.height/2+400));
 	this->addChild(sp6, 0);
 
-	CCSprite* sp7 = CCSprite::create("ModernFictionHead.png");
+	CCSprite* sp7 = CCSprite::create("Widget1_3.png");
 	sp7->setPosition(ccp(mysize.width/2+154, mysize.height/2+400));
 	this->addChild(sp7, 0);
+
+	CCSprite* sp8 = CCSprite::create("CMPrimitive.png");
+	sp8->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+	this->addChild(sp8, 0);
 
     return true;
 }
@@ -153,12 +153,14 @@ void HeroIntroScene::changescene(CCObject* pSender){
 	CCScene * scene2=GameScene::scene();
 	CCTransitionScene * s10=CCTransitionJumpZoom::create(1,scene2);
 	CCDirector::sharedDirector()->replaceScene(s10);
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
 }
 
 void HeroIntroScene::changescene_return(CCObject* pSender){
 	CCScene * scene=ModeSelectScene::scene();
 	CCTransitionScene * s10=CCTransitionJumpZoom::create(1,scene);
 	CCDirector::sharedDirector()->replaceScene(s10);
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
 
 }
 
@@ -193,10 +195,11 @@ void HeroIntroScene::changescene_left(CCObject* pSender){
 			CCSprite* sp4 = CCSprite::create("Bird4.png");
 			sp4->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp4, 2);
+			break;
 		}
-		break;
 	default:break;
 	}
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
 }
 
 void HeroIntroScene::changescene_right(CCObject* pSender){
@@ -206,7 +209,7 @@ void HeroIntroScene::changescene_right(CCObject* pSender){
 	switch(m){
 	case 0:
 		{
-			CCSprite* sp1 = CCSprite::create("CMPrititive1.png");
+			CCSprite* sp1 = CCSprite::create("CMPrimitive1.png");
 			sp1->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp1, 2);
 			break;
@@ -234,6 +237,7 @@ void HeroIntroScene::changescene_right(CCObject* pSender){
 		}
 	default:break;
 	}
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
 }
 
 void HeroIntroScene::onEnter(){

@@ -57,6 +57,9 @@
     <ClCompile Include="Sources\Scenes\ModeSelectScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Effects\Laser.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\win32\main.h">
@@ -98,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="Sources\Scenes\ModeSelectScene.h">
       <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Effects\Laser.h">
+      <Filter>Effects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

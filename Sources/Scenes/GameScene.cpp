@@ -4,6 +4,7 @@
 #include "Controller\GameController.h"
 #include "Scenes\WinScene.h"
 #include "Utils.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 using namespace cocos2d::extension;
@@ -22,6 +23,7 @@ bool GameScene::init()
 	initPlayer();
 	initWidget();
 	mLevel = 1;
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("FightBGMusic.mp3", true);
 	return true;
 }
 
@@ -86,6 +88,9 @@ void GameScene::initPlayer()
 		pFriend->setController(mGameController);
 	}
 	mGameController->setAttackingEntity(mFriendVec[0]);
+	mFriendVec[1]->increaseLevel();
+	mFriendVec[2]->increaseLevel();
+	mFriendVec[2]->increaseLevel();
 
 
 	// 创建二个敌人
@@ -141,6 +146,7 @@ void GameScene::increaseLevel()
 		CCSequence *pAction = CCSequence::create(pMoveTo, pCallFunc, NULL);
 		mBGParent->runAction(pAction);
 		mLevel = 2;
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BeginAttack.wav");
 	}
 	else if(2 == mLevel)
 	{
@@ -154,18 +160,24 @@ void GameScene::increaseLevel()
 		CCSequence *pAction = CCSequence::create(pMoveTo, pCallFunc, NULL);
 		mBGParent->runAction(pAction);
 		mLevel = 3;
+
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("BossBGMusic.wav", true);
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossAccur.mp3");
 	}
 	else
 	{
-		// 胜利，弹出胜利界面
+		// TODO: 胜利，弹出胜利界面
 		CCScene *pScene = WinScene::scene();
 		CCDirector::sharedDirector()->replaceScene(pScene);
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossDie.wav");
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("GameSuccess.mp3", true);
 	}
-
+/*
 	for(int i=0; i<mFriendVec.size(); ++i)
 	{
 		mFriendVec[i]->increaseLevel();
 	}
+*/
 	mGameController->setAttackingEntity(mFriendVec[0]);
 }
 
@@ -231,37 +243,17 @@ void GameScene::initLevel3()
 	}
 	mEnermyVec.clear();
 
-	// 创建新的Enermy
-	Enermy *pEnermy = new Enermy("Enermy1.png");
+	
 	CCPoint epos;
-	pEnermy->setHp(800);
-	pEnermy->setAttackHurt(30);
-	pEnermy->setType(1);
-	pEnermy->setController(mGameController);
-	epos.y = 2*SCREEN_HEIGHT-300; epos.x = visibleSize.width*(1.0/6);
-	addEnermy(pEnermy, epos);
-	CCMoveBy *pMoveTo1 = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
-	pEnermy->runAction(pMoveTo1);
-
-	pEnermy = new Enermy("Boss.png");
+	Enermy *pEnermy = new Enermy("Boss.png");
 	pEnermy->setHp(2000);
 	pEnermy->setAttackHurt(100);
 	pEnermy->setType(3);
 	pEnermy->setController(mGameController);
 	epos.y = 2*SCREEN_HEIGHT-100; epos.x = visibleSize.width*(3.0/6);
 	addEnermy(pEnermy, epos);
-	CCMoveBy *pMoveTo2 = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
-	pEnermy->runAction(pMoveTo2);
-
-	pEnermy = new Enermy("Enermy2.png");
-	pEnermy->setHp(800);
-	pEnermy->setAttackHurt(60);
-	pEnermy->setType(2);
-	pEnermy->setController(mGameController);
-	epos.y = 2*SCREEN_HEIGHT-300; epos.x = visibleSize.width*(5.0/6);
-	addEnermy(pEnermy, epos);
-	CCMoveBy *pMoveTo3 = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
-	pEnermy->runAction(pMoveTo3);
+	CCMoveBy *pMoveTo = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
+	pEnermy->runAction(pMoveTo);
 
 	// 设置从Player重新开始
 	mGameController->resetNewLevel();
