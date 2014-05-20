@@ -30,6 +30,7 @@ public:
 
 	void friendsAttacked(Friend *pFriend,int hp);
 	void enermyAttacked(Enermy *pEnermy, int hp);
+	void enermyAttacked(Friend *pFriend, float dis, int hp);
 
 	void clearEnermy();
 	void resetNewLevel();

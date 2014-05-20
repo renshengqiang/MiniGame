@@ -343,6 +343,28 @@ void GameController::enermyAttacked(Enermy *pEnermy, int hp)
 	}
 }
 
+void GameController::enermyAttacked(Friend *pFriend, float dis, int hp)
+{
+	CCPoint fPos = pFriend->getPosition();
+	for(unsigned i=0; i<mEnermyVec.size(); ++i)
+	{
+		if(mEnermyVec[i]->dead() == false)
+		{
+			CCPoint ePos = mEnermyVec[i]->getPosition();
+			CCPoint delta  = ePos - fPos;
+			float d = delta.getLength();
+
+			if(d <= dis)
+			{
+				mEnermyVec[i]->underAttack(hp);
+			}
+			else
+			{
+				CCLog("d: %f\n", d);
+			}
+		}
+	}
+}
 /*
 ** 清除当前局的所有Enermy
 */

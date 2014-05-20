@@ -245,6 +245,46 @@ void Friend::attack2()
 {
 	if(mTriggleFlag == false)
 	{	
+	// 通知controller多了一个攻击者
+	m_controller->addAttackingFriend();
+	switch(mLevel)
+	{
+	//爆炸特效
+	case 1:
+		mParticleSystem = CCParticleExplosion::create();
+		mParticleSystem->setDuration(FRIEND_ATTACK_TIME);
+		mParticleSystem->setLife(FRIEND_ATTACK_TIME);
+		mParticleSystem->setSpeed(100);		// 200范围内全部受伤
+		mParticleSystem->setSpeedVar(0);
+		mParticleSystem->setTexture(CCTextureCache::sharedTextureCache()->addImage("fire.png"));
+		mParticleSystem->setAutoRemoveOnFinish(true);
+		mParticleSystem->setPositionType(kCCPositionTypeGrouped);
+		mParticleSystem->setPosition(ccp(0, 0));
+		this->addChild(mParticleSystem);
+		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExplode.wav");
+		break;
+	case 2:
+		mParticleSystem = CCParticleFlower::create();
+		mParticleSystem->setTexture( CCTextureCache::sharedTextureCache()->addImage("stars.png"));
+		mParticleSystem->setLifeVar(0);
+		mParticleSystem->setLife(FRIEND_ATTACK_TIME);
+		mParticleSystem->setSpeed(400);
+		mParticleSystem->setSpeedVar(0);
+		mParticleSystem->setEmissionRate(10000);
+		mParticleSystem->setPosition(ccp(0, 0));
+		this->addChild(mParticleSystem);
+		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExpand.mp3");
+		break;
+	case 3:
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendLightBunch.mp3");
+		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
+		break;
+	}
+	mTriggleFlag = true;
+	}
+	/*
 		// TODO:释放友情技能
 		mParticleSystem = CCParticleFireworks::create();
 		mParticleSystem->setDuration(ENERMY_ATTACK_TIME);
@@ -262,30 +302,31 @@ void Friend::attack2()
 		// 然后创建一个定时任务，爆炸结束后通知controller对友军进行伤害，然后到下一个继续执行
 		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
 		mTriggleFlag = true;
-	}
-	switch(mLevel)
-	{
-	case 1:
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExplode.wav");
-		break;
-	case 2:
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExpand.mp3");
-		break;
-	case 3:
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendLightBunch.mp3");
-		break;
-	}
+		*/
 }
 
 void Friend::attack2End(float)
 {
 	// 需要通知controller自己的攻击已经结束了，并对友军进行一定的伤害
 	// controller在收到该通知后才能继续选择下一个攻击的选手
-	m_controller->enermyAttacked(NULL, mAttack2Hurt);
+	switch(mLevel)
+	{
+	case 1:
+		m_controller->enermyAttacked(this, 300, mAttack2Hurt);
+		mParticleSystem->getParent()->removeChild(mParticleSystem);
+		break;
+	case 2:
+		m_controller->enermyAttacked(NULL, mAttack2Hurt);
+		mParticleSystem->getParent()->removeChild(mParticleSystem);
+		break;
+	case 3:
+		//TODO:英雄三的特技需要加进来
+		break;
+	}
 	m_controller->removeAttackingFriend();
-	mParticleSystem->getParent()->removeChild(mParticleSystem);
 	mParticleSystem = NULL;
 }
+
 /*
 ** 受到攻击，先执行Entity的扣血
 ** 然后判断当前状态是否是死亡状态，若是则设置自己为不可见，同时播放死亡特效

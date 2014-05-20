@@ -66,8 +66,9 @@ void Enermy::attack()
 		m_particleSystem = CCParticleExplosion::create();
 		m_particleSystem->setDuration(ENERMY_ATTACK_TIME);
 		m_particleSystem->setLife(ENERMY_ATTACK_TIME);
+		CCLog("speed %f\n", m_particleSystem->getSpeed());
 		m_particleSystem->setSpeed(m_particleSystem->getSpeed() * 4);
-		m_particleSystem->setTexture(CCTextureCache::sharedTextureCache()->addImage("boss_particle.png"));
+		m_particleSystem->setTexture(CCTextureCache::sharedTextureCache()->addImage("fire.png"));
 		m_particleSystem->setAutoRemoveOnFinish(true);
 		m_particleSystem->setPositionType(kCCPositionTypeGrouped);
 		m_particleSystem->setPosition(ccp(0, 0));
