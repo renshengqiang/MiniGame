@@ -12,6 +12,8 @@ public:
 
 	void setAttack1Hurt(float hurt) { mAttack1Hurt = hurt;}
 	void setAttack2Hurt(float hurt) { mAttack2Hurt = hurt;}
+	int getAttack1Hurt() { return mAttack1Hurt; }
+	int getAttack2Hurt() { return mAttack2Hurt; }
 	void setAttackSpeed(float x, float y);
 	void setTiggleFlag(bool flag) { mTriggleFlag = flag; }
 	void setAttackTime(float time) { mAttackTimeLeft = time; }

@@ -368,12 +368,12 @@ void Friend::increaseLevel()
 	case 0:
 		mAttack1Hurt = 15;
 		mAttack2Hurt = 10;
-		setHp(150);
+		setHp(100);
 		break;
 	case 1:
 		mAttack1Hurt = 45;
 		mAttack2Hurt = 100;
-		setHp(400);
+		setHp(450);
 		break;
 	case 2:
 		mAttack1Hurt = 200;

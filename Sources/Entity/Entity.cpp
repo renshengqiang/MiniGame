@@ -26,7 +26,6 @@ void Entity::bindSprite(CCSprite *sprite)
 {
 	m_sprite = sprite;
 	CCNode::addChild(m_sprite);
-
 }
 
 void Entity::setHp(int hp)

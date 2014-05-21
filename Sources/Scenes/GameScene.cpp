@@ -3,6 +3,7 @@
 #include "Entity\Enermy.h"
 #include "Controller\GameController.h"
 #include "Scenes\WinScene.h"
+#include "UI\Toolbar.h"
 #include "Utils.h"
 #include "SimpleAudioEngine.h"
 
@@ -13,15 +14,16 @@ using namespace std;
 GameScene::GameScene():
 	mBGParent(NULL),
 	mBGsprite(NULL),
-	mBGsprite2(NULL)
+	mBGsprite2(NULL),
+	mToolbar(NULL)
 {
 }
 
 bool GameScene::init()
 {
+	initWidget();
 	initBackground();
 	initPlayer();
-	initWidget();
 	mLevel = 1;
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("FightBGMusic.mp3", true);
 	return true;
@@ -37,19 +39,36 @@ CCScene* GameScene::scene()
 
 void GameScene::initWidget()
 {
-	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-	mWidget[0] = CCSprite::create("Widget1_1.png");
-	mWidget[0]->setPosition(ccp(77, 71));
-	mWidget[1] = CCSprite::create("Widget1_2.png");
-	mWidget[1]->setPosition(ccp(231, 71));
-	mWidget[2] = CCSprite::create("Widget1_3.png");
-	mWidget[2]->setPosition(ccp(385, 71));
-	mWidget[3] = CCSprite::create("Widget1_4.jpg");
-	mWidget[3]->setPosition(ccp(591, 71));
-	for(int i=0;i<4;++i)
-	{
-		CCLayer::addChild(mWidget[i], 5);
-	}	
+	CCMenuItemImage *pButton = CCMenuItemImage::create("Widget1_1.png", "Widget1_1.png",this, menu_selector(GameScene::onButton1));
+	pButton->setPosition(77, 71);
+	// create menu, it's an autorelease object
+    CCMenu* pMenu = CCMenu::create(pButton, NULL);
+    pMenu->setPosition(CCPointZero);
+    this->addChild(pMenu, 5);
+
+	pButton = CCMenuItemImage::create("Widget1_2.png", "Widget1_2.png",this, menu_selector(GameScene::onButton2));
+	pButton->setPosition(231, 71);
+	// create menu, it's an autorelease object
+    pMenu = CCMenu::create(pButton, NULL);
+    pMenu->setPosition(CCPointZero);
+    this->addChild(pMenu, 5);
+
+	pButton = CCMenuItemImage::create("Widget1_3.png", "Widget1_3.png",this, menu_selector(GameScene::onButton3));
+	pButton->setPosition(385, 71);
+	// create menu, it's an autorelease object
+    pMenu = CCMenu::create(pButton, NULL);
+    pMenu->setPosition(CCPointZero);
+    this->addChild(pMenu, 5);
+
+	pButton = CCMenuItemImage::create("Widget1_4.jpg", "Widget1_4.jpg",this, menu_selector(GameScene::onButton4));
+	pButton->setPosition(591, 71);
+	// create menu, it's an autorelease object
+    pMenu = CCMenu::create(pButton, NULL);
+    pMenu->setPosition(CCPointZero);
+    this->addChild(pMenu, 5);
+
+	mToolbar = Toolbar::create();
+	this->addChild(mToolbar, 5);
 }
 
 void GameScene::initBackground()
@@ -71,6 +90,7 @@ void GameScene::initPlayer()
 	mGameController = GameController::create();
 	CCLayer::addChild(mGameController);
 
+	mGameController->setToolbar(mToolbar);
 	// ´´½¨2¸öFriends
 	CCPoint pos[3];
 	char *friendFileName[3] = {"Hero.png", "Friend1.png", "Friend2.png"};
@@ -88,6 +108,7 @@ void GameScene::initPlayer()
 		pFriend->setController(mGameController);
 	}
 	mGameController->setAttackingEntity(mFriendVec[0]);
+	mToolbar->setEntity(mFriendVec[0]);
 	mFriendVec[1]->increaseLevel();
 	mFriendVec[2]->increaseLevel();
 	mFriendVec[2]->increaseLevel();
@@ -128,8 +149,21 @@ void GameScene::addEnermy(Enermy *pEnermy, const CCPoint &pos)
 	mEnermyVec.push_back(pEnermy);
 }
 
-void GameScene::onButtonClicked(CCObject *pSender, CCControlEvent event)
+void GameScene::onButton1(CCObject *pSender)
 {
+	CCLOG("button1 clicked\n");
+}
+void GameScene::onButton2(CCObject *pSender)
+{
+	CCLOG("button2 clicked\n");
+}
+void GameScene::onButton3(CCObject *pSender)
+{
+	CCLOG("button3 clicked\n");
+}
+void GameScene::onButton4(CCObject *pSender)
+{
+	CCLOG("button4 clicked\n");
 }
 
 void GameScene::increaseLevel()
@@ -172,13 +206,14 @@ void GameScene::increaseLevel()
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossDie.wav");
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("GameSuccess.mp3", true);
 	}
-/*
-	for(int i=0; i<mFriendVec.size(); ++i)
+
+	int i;
+	for(i=0; i<mFriendVec.size(); ++i)
 	{
-		mFriendVec[i]->increaseLevel();
+		if(mFriendVec[i]->dead() == false)
+			break;
 	}
-*/
-	mGameController->setAttackingEntity(mFriendVec[0]);
+	mGameController->setAttackingEntity(mFriendVec[i]);
 }
 
 void GameScene::initLevel2()
@@ -265,4 +300,3 @@ void GameScene::moveEnd()
 	mBGsprite->getParent()->removeChild(mBGsprite);
 	mBGsprite = mBGsprite2;
 }
-

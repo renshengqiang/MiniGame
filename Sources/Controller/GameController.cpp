@@ -3,6 +3,7 @@
 #include "Entity\Enermy.h"
 #include "Scenes\WinScene.h"
 #include "Scenes\GameScene.h"
+#include "UI\Toolbar.h"
 #include "Utils.h"
 #include "SimpleAudioEngine.h"
 
@@ -253,6 +254,7 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 
 	while(mEntityVec[index]->dead()) index=(index+1)%mEntityVec.size();
 	mAttackingEntity = mEntityVec[index];
+	mToolbar->setEntity(mAttackingEntity);
 
 	// 设置为激活状态，如果是自动攻击对象则进行自动攻击
 	mAttackingEntity->setActive(true);
@@ -358,10 +360,6 @@ void GameController::enermyAttackedByLaser(Friend *pFriend, int hp)
 			if(abs(fPos.x - ePos.x) <= FRIEND_SIZE || abs(fPos.y - ePos.y) <= FRIEND_SIZE)
 			{
 				mEnermyVec[i]->underAttack(hp);
-			}
-			else
-			{
-				CCLog("----------- %f %f\n", abs(fPos.x - ePos.x), abs(fPos.y - ePos.y));
 			}
 		}
 	}

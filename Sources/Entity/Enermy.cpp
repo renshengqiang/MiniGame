@@ -1,6 +1,7 @@
 #include "Enermy.h"
 #include "Controller\GameController.h"
-#include "Effects\Laser.h"
+#include "Effects\Arrow.h"
+#include "effects\Missle.h"
 #include "Utils.h"
 #include "Friend.h"
 #include "SimpleAudioEngine.h"
@@ -43,25 +44,24 @@ void Enermy::attack()
 		{
 			mAttackedFriend = m_controller->getOneAttackedFriend();
 			CCPoint friendPos = mAttackedFriend->getPosition();
-			Laser *pLaser = Laser::create();
-			this->addChild(pLaser);
-			pLaser->show(this->getPosition(), mAttackedFriend->getPosition());
-			mFXSprite = pLaser;
-			scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
+			Arrow *pArrow = Arrow::create();
+			this->addChild(pArrow);
+			pArrow->show(this->getPosition(), mAttackedFriend->getPosition());
+			mFXSprite = pArrow;
+			scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
 			//scheduleOnce(schedule_selector(Enermy::attackTempEnd), 0.3*ENERMY_ATTACK_TIME);
 		}
 		break;
 	case 2:
-		m_particleSystem = CCParticleFlower::create();
-		m_particleSystem->setTexture( CCTextureCache::sharedTextureCache()->addImage("stars.png"));
-		m_particleSystem->setLifeVar(0);
-		m_particleSystem->setLife(ENERMY_ATTACK_TIME);
-		m_particleSystem->setSpeed(400);
-		m_particleSystem->setSpeedVar(0);
-		m_particleSystem->setEmissionRate(10000);
-		m_particleSystem->setPosition(ccp(0, 0));
-		this->addChild(m_particleSystem);
-		scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
+		{
+			mAttackedFriend = m_controller->getOneAttackedFriend();
+			CCPoint friendPos = mAttackedFriend->getPosition();
+			Missle *pMissle = Missle::create();
+			this->addChild(pMissle);
+			pMissle->show(this->getPosition(), mAttackedFriend->getPosition());
+			mFXSprite = pMissle;
+			scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
+		}
 		break;
 	case 3:
 		m_particleSystem = CCParticleExplosion::create();
@@ -74,7 +74,7 @@ void Enermy::attack()
 		m_particleSystem->setPositionType(kCCPositionTypeGrouped);
 		m_particleSystem->setPosition(ccp(0, 0));
 		this->addChild(m_particleSystem);
-		scheduleOnce(schedule_selector(Enermy::attackEnd), ENERMY_ATTACK_TIME);
+		scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
 
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossSkill.mp3");
 		break;
@@ -149,20 +149,25 @@ void Enermy::attackTempEnd(float)
 void Enermy::attackEnd(float)
 {
 	// 通知controller对所有选手进行一次伤害
-	if(1 == mType)
+	if(mType <= 2)
 	{
 		mFXSprite->getParent()->removeChild(mFXSprite);
 		m_controller->friendsAttacked(mAttackedFriend, mAttackHurt);
-		m_controller->leaveFromAttacking(this);
+
 	}
 	else
 	{
 		m_activated = false;
 		m_controller->friendsAttacked(NULL, mAttackHurt);
-		m_controller->leaveFromAttacking(this);
 		m_particleSystem->getParent()->removeChild(m_particleSystem);
 		m_particleSystem = NULL;
 	}
+	scheduleOnce(schedule_selector(Enermy::attackEndEnd), 0.3*ENERMY_ATTACK_TIME);
+}
+
+void Enermy::attackEndEnd(float)
+{
+	m_controller->leaveFromAttacking(this);
 }
 
 void Enermy::die()

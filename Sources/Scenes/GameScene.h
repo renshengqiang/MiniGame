@@ -5,8 +5,10 @@
 #include <vector>
 
 class Friend;
+class Entity;
 class Enermy;
 class GameController;
+class Toolbar;
 class GameScene : public cocos2d::CCLayer
 {
 	friend class GameController;
@@ -27,7 +29,10 @@ private:
 	void addEnermy(Enermy *pEnermy, const cocos2d::CCPoint &pos);
 	void moveEnd();
 
-	void onButtonClicked(CCObject *pSender, cocos2d::extension::CCControlEvent event);
+	void onButton1(CCObject *pSender);
+	void onButton2(CCObject *pSender);
+	void onButton3(CCObject *pSender);
+	void onButton4(CCObject *pSender);
 private:
 	cocos2d::CCNode *mBGParent;		 //背景的父节点
 	cocos2d::CCSprite *mBGsprite;	 // 背景
@@ -36,7 +41,7 @@ private:
 	std::vector<Enermy*> mEnermyVec; // 敌人
 	int mLevel;						 // 目前的游戏等级
 	GameController *mGameController; // 游戏控制器
-	cocos2d::CCSprite *mWidget[4];   // 控件
+	Toolbar *mToolbar;
 };
 
 

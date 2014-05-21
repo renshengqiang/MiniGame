@@ -21,6 +21,8 @@ public:
 	bool dead() { return m_hp<=0; }
 	void setHp(int hp);
 	void health(int hp);
+	int getHp(){ return m_hp;}
+	int getFullHp() { return m_fullHp; }
 	virtual void underAttack(int hp);
 	virtual void attack() = 0;		// 释放技能
 	virtual void setAttackSpeed(float x, float y){}; // 设置攻击速度，为了方便统一设置，将此函数放在这里

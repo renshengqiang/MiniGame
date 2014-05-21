@@ -131,9 +131,10 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="Sources\AppDelegate\AppDelegate.cpp" />
     <ClCompile Include="Sources\Controller\GameController.cpp" />
     <ClCompile Include="Sources\Effects\AnimationUtil.cpp" />
-    <ClCompile Include="Sources\Effects\Laser.cpp" />
+    <ClCompile Include="Sources\Effects\Arrow.cpp" />
     <ClCompile Include="Sources\Effects\FlowWord.cpp" />
     <ClCompile Include="Sources\Effects\LightBunch.cpp" />
+    <ClCompile Include="Sources\Effects\Missle.cpp" />
     <ClCompile Include="Sources\Entity\Enermy.cpp" />
     <ClCompile Include="Sources\Entity\Entity.cpp" />
     <ClCompile Include="Sources\Entity\Friend.cpp" />
@@ -142,6 +143,8 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="Sources\Scenes\LoginScene.cpp" />
     <ClCompile Include="Sources\Scenes\ModeSelectScene.cpp" />
     <ClCompile Include="Sources\Scenes\WinScene.cpp" />
+    <ClCompile Include="Sources\UI\Statusbar.cpp" />
+    <ClCompile Include="Sources\UI\Toolbar.cpp" />
     <ClCompile Include="Sources\win32\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +152,10 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="Sources\Controller\ControllerListener.h" />
     <ClInclude Include="Sources\Controller\GameController.h" />
     <ClInclude Include="Sources\Effects\AnimationUtil.h" />
-    <ClInclude Include="Sources\Effects\Laser.h" />
+    <ClInclude Include="Sources\Effects\Arrow.h" />
     <ClInclude Include="Sources\Effects\FlowWord.h" />
     <ClInclude Include="Sources\Effects\LightBunch.h" />
+    <ClInclude Include="Sources\Effects\Missle.h" />
     <ClInclude Include="Sources\Entity\Enermy.h" />
     <ClInclude Include="Sources\Entity\Entity.h" />
     <ClInclude Include="Sources\Entity\Friend.h" />
@@ -160,6 +164,8 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="Sources\Scenes\LoginScene.h" />
     <ClInclude Include="Sources\Scenes\ModeSelectScene.h" />
     <ClInclude Include="Sources\Scenes\WinScene.h" />
+    <ClInclude Include="Sources\UI\Statusbar.h" />
+    <ClInclude Include="Sources\UI\Toolbar.h" />
     <ClInclude Include="Sources\Utils.h" />
     <ClInclude Include="Sources\win32\main.h" />
   </ItemGroup>

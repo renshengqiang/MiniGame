@@ -18,9 +18,10 @@ public:
 	void setType(int type){ mType = type; }
 	void Enermy::attackTempEnd(float);
 	void attackEnd(float delta);
+	void attackEndEnd(float delta);
 	void die();
 	void propsMoveEnd(cocos2d::CCNode *pSender, void *data);
-
+	int getAttackHurt() { return mAttackHurt;}
 private:
 	int mAttackHurt;	// ¼¼ÄÜÉËº¦Öµ
 	int mType;

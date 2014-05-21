@@ -19,6 +19,9 @@
     <Filter Include="Effects">
       <UniqueIdentifier>{7b70ab79-7b4e-4a22-9f15-1c0892efec2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{a5f222b7-bb4c-48dc-bf30-d86a428046c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\win32\main.cpp">
@@ -57,14 +60,23 @@
     <ClCompile Include="Sources\Scenes\ModeSelectScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Effects\Laser.cpp">
-      <Filter>Effects</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Effects\AnimationUtil.cpp">
       <Filter>Effects</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Effects\LightBunch.cpp">
       <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Effects\Missle.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Effects\Arrow.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\UI\Toolbar.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\UI\Statusbar.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,14 +120,23 @@
     <ClInclude Include="Sources\Scenes\ModeSelectScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Effects\Laser.h">
-      <Filter>Effects</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Effects\AnimationUtil.h">
       <Filter>Effects</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Effects\LightBunch.h">
       <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Effects\Missle.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Effects\Arrow.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\UI\Toolbar.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\UI\Statusbar.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
