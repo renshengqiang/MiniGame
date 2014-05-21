@@ -60,6 +60,12 @@
     <ClCompile Include="Sources\Effects\Laser.cpp">
       <Filter>Effects</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Effects\AnimationUtil.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Effects\LightBunch.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\win32\main.h">
@@ -103,6 +109,12 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Effects\Laser.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Effects\AnimationUtil.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Effects\LightBunch.h">
       <Filter>Effects</Filter>
     </ClInclude>
   </ItemGroup>

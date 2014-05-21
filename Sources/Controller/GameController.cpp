@@ -343,6 +343,30 @@ void GameController::enermyAttacked(Enermy *pEnermy, int hp)
 	}
 }
 
+/*
+** 友军激光攻击：需要判断有哪几个Enermy受到伤害
+*/
+void GameController::enermyAttackedByLaser(Friend *pFriend, int hp)
+{
+	CCPoint fPos = pFriend->getPosition();
+
+	for(unsigned i=0; i<mEnermyVec.size(); ++i)
+	{
+		if(mEnermyVec[i]->dead() == false)
+		{
+			CCPoint ePos = mEnermyVec[i]->getPosition();
+			if(abs(fPos.x - ePos.x) <= FRIEND_SIZE || abs(fPos.y - ePos.y) <= FRIEND_SIZE)
+			{
+				mEnermyVec[i]->underAttack(hp);
+			}
+			else
+			{
+				CCLog("----------- %f %f\n", abs(fPos.x - ePos.x), abs(fPos.y - ePos.y));
+			}
+		}
+	}
+}
+
 void GameController::enermyAttacked(Friend *pFriend, float dis, int hp)
 {
 	CCPoint fPos = pFriend->getPosition();

@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "Friend.h"
 #include "SimpleAudioEngine.h"
+#include "Effects\AnimationUtil.h"
 
 USING_NS_CC;
 using namespace cocos2d::extension;
@@ -102,6 +103,13 @@ void Enermy::underAttack(int hp)
 		CCSequence *dieAction = CCSequence::create(blinkDieAction, dieEndAction, NULL);
 		this->runAction(dieAction);
 
+/* TODO: ²âÊÔ±¬Õ¨Ð§¹û
+		CCSprite *pRunsp = CCSprite::create("Bomb01.png");
+		this->addChild(pRunsp);
+		CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("Boomb0.plist", "Boomb0.png");
+		CCAnimation *animation  = AnimationUtil::createAnimWithFrameNameAndNum("Boomb0", 16, 0.1f, -1);
+		pRunsp->runAction(CCAnimate::create(animation));
+*/
 		CCSprite *props = CCSprite::create("props.png");
 		CCBlink *blinkAction = CCBlink::create(0.2,3);
 		CCMoveTo *moveAction = CCMoveTo::create(0.5, ccp(10, SCREEN_HEIGHT-10));

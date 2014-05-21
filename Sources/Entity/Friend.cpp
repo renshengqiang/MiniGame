@@ -3,6 +3,7 @@
 #include "Controller\GameController.h"
 #include "Utils.h"
 #include "SimpleAudioEngine.h"
+#include "Effects\LightBunch.h"
 
 USING_NS_CC;
 using namespace cocos2d::extension;
@@ -249,8 +250,8 @@ void Friend::attack2()
 	m_controller->addAttackingFriend();
 	switch(mLevel)
 	{
-	//爆炸特效
 	case 1:
+		//爆炸特效
 		mParticleSystem = CCParticleExplosion::create();
 		mParticleSystem->setDuration(FRIEND_ATTACK_TIME);
 		mParticleSystem->setLife(FRIEND_ATTACK_TIME);
@@ -265,6 +266,7 @@ void Friend::attack2()
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExplode.wav");
 		break;
 	case 2:
+		//扩散特效
 		mParticleSystem = CCParticleFlower::create();
 		mParticleSystem->setTexture( CCTextureCache::sharedTextureCache()->addImage("stars.png"));
 		mParticleSystem->setLifeVar(0);
@@ -278,6 +280,11 @@ void Friend::attack2()
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExpand.mp3");
 		break;
 	case 3:
+		//激光束特效
+		LightBunch *pLightBunch = LightBunch::create();
+		CCNode::addChild(pLightBunch);
+		pLightBunch->show();
+
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendLightBunch.mp3");
 		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
 		break;
@@ -320,7 +327,7 @@ void Friend::attack2End(float)
 		mParticleSystem->getParent()->removeChild(mParticleSystem);
 		break;
 	case 3:
-		//TODO:英雄三的特技需要加进来
+		m_controller->enermyAttackedByLaser(this, mAttack2Hurt);
 		break;
 	}
 	m_controller->removeAttackingFriend();
