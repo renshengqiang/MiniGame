@@ -24,6 +24,7 @@ bool GameController::init()
 	mAttackingEntity = NULL;
 	mIsAttacking = false;
 	mAttackingFriendCnt = 0;
+	mAttackedEnermyCnt = 0;
 	mpArrowSprite = NULL;
 	mIsFingerDown = false;
 	return true;
@@ -54,9 +55,9 @@ void GameController::normalizePos(Entity *pEntity)
 	{
 		pos.y = FRIEND_SIZE/2 + WIDGET_HEIGHT;
 	}
-	else if(pos.y > SCREEN_HEIGHT - FRIEND_SIZE/2)
+	else if(pos.y > SCREEN_HEIGHT - FRIEND_SIZE/2 - WIDGET_HEIGHT)
 	{
-		pos.y = SCREEN_HEIGHT - FRIEND_SIZE/2;
+		pos.y = SCREEN_HEIGHT - FRIEND_SIZE/2  - WIDGET_HEIGHT;
 	}
 	pEntity->setTagPosition(pos.x, pos.y);
 }
@@ -85,13 +86,13 @@ void GameController::addEnermy(Enermy *pEnermy)
 */
 Friend *GameController::getOneAttackedFriend()
 {
-	cc_timeval psv;   
+	cc_timeval psv;
 	CCTime::gettimeofdayCocos2d( &psv, NULL );
 	unsigned int tsrans = psv.tv_sec * 1000 + psv.tv_usec / 1000;
 	unsigned int index = tsrans%3;
 	
-	if(mFriendVec[index]->dead() == false) index = (index+1)%3;
-	if(mFriendVec[index]->dead() == false) index = (index+1)%3;
+	if(mFriendVec[index]->dead() == true) index = (index+1)%3;
+	if(mFriendVec[index]->dead() == true) index = (index+1)%3;
 	return mFriendVec[index];
 }
 
@@ -169,7 +170,7 @@ bool GameController::conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNo
 		wallNormal.x = -1;
 		wallNormal.y = 0;
 	}
-	else if(pos.y > SCREEN_HEIGHT - FRIEND_SIZE/2)
+	else if(pos.y > SCREEN_HEIGHT - FRIEND_SIZE/2-WIDGET_HEIGHT)
 	{
 		wallNormal.x = 0;
 		wallNormal.y = -1;
@@ -204,6 +205,22 @@ void GameController::setAttackingEntity(Entity *pEntity)
 void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 {
 	if(mAttackingFriendCnt > 0) return;
+
+	//选择下一个Entity进入攻击状态
+	if(NULL != pAttackingEntity)
+	{
+		int index = 0;
+		for(int i=0; i<mEntityVec.size(); ++i)
+		{
+			if(pAttackingEntity == mEntityVec[i]) index = i;
+		}
+		index = (index+1)%mEntityVec.size();
+
+		while(mEntityVec[index]->dead()) index=(index+1)%mEntityVec.size();
+		mAttackingEntity = mEntityVec[index];
+	}
+
+	if(mAttackedEnermyCnt > 0) return;
 
 	// 1 游戏结束
 	bool endFlag = true;
@@ -240,20 +257,17 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 		if(NULL != pParentScene)
 		{
 			pParentScene->increaseLevel();
+			// 设置toolbar上显示的是新一轮攻击的Entity的情况
+			int index = 0;
+			for(index=0; index<mFriendVec.size(); ++index)
+			{
+				if(mFriendVec[index] != NULL) break;
+			}
+			mToolbar->setEntity(mFriendVec[index]);
 			return;
 		}
 	}
 
-	// 3 选择下一个Entity进入攻击状态
-	int index = 0;
-	for(int i=0; i<mEntityVec.size(); ++i)
-	{
-		if(pAttackingEntity == mEntityVec[i]) index = i;
-	}
-	index = (index+1)%mEntityVec.size();
-
-	while(mEntityVec[index]->dead()) index=(index+1)%mEntityVec.size();
-	mAttackingEntity = mEntityVec[index];
 	mToolbar->setEntity(mAttackingEntity);
 
 	// 设置为激活状态，如果是自动攻击对象则进行自动攻击
@@ -284,6 +298,19 @@ void  GameController::removeAttackingFriend()
 {
 	--mAttackingFriendCnt;
 	leaveFromAttacking(mAttackingEntity);
+}
+
+void GameController::addAttackedEnermy()
+{
+	++mAttackedEnermyCnt;
+	CCLog("++++++++++++add\n");
+}
+
+void GameController::removeAttackedEnermy()
+{
+	--mAttackedEnermyCnt;
+	leaveFromAttacking(NULL);
+	CCLog("-----------remove\n");
 }
 /*
 ** 怪物发动攻击，主角和友军会同时受到攻击
@@ -424,6 +451,7 @@ void GameController::resetNewLevel()
 */
 bool GameController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 {
+	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	if(mIsAttacking) return true;
 	if(mIsFingerDown) return true;
 	// 获取坐标
@@ -432,6 +460,7 @@ bool GameController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 	mTouchBeginPos = touchPos;
 
 	if(mTouchBeginPos.y < WIDGET_HEIGHT) return true;
+	if(mTouchBeginPos.y >= visibleSize.height - WIDGET_HEIGHT) return true;
 	//TODO: 判断当前是哪个选手在进行攻击，并且创建箭头
 	mpArrowSprite = CCSprite::create("arrow.png");
 	//mpArrowSprite->setScaleX(2.0f);

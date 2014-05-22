@@ -87,29 +87,16 @@ void Enermy::underAttack(int hp)
 	if(m_hp < hp) hp = m_hp;
 	Entity::underAttack(hp);
 
-	// 播放受击动画
-	CCActionInterval *shaky3DFX = CCShaky3D::create(0.5, CCSizeMake(15, 10), 5, false);
-	CCStopGrid *stopGrid = CCStopGrid::create();
-	CCSequence *action = CCSequence::create(shaky3DFX, stopGrid, NULL);
-	this->runAction(action);
+	m_controller->addAttackedEnermy();
 
 	if(dead())
 	{	
-		setVisible(false);
-		
 		// 播放死亡特效,生成一个金币，并向道具栏漂移
-		CCBlink *blinkDieAction = CCBlink::create(1,7);
+		CCBlink *blinkDieAction = CCBlink::create(1,5);
 		CCCallFunc *dieEndAction = CCCallFunc::create(this, callfunc_selector(Enermy::die));
 		CCSequence *dieAction = CCSequence::create(blinkDieAction, dieEndAction, NULL);
 		this->runAction(dieAction);
 
-/* TODO: 测试爆炸效果
-		CCSprite *pRunsp = CCSprite::create("Bomb01.png");
-		this->addChild(pRunsp);
-		CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("Boomb0.plist", "Boomb0.png");
-		CCAnimation *animation  = AnimationUtil::createAnimWithFrameNameAndNum("Boomb0", 16, 0.1f, -1);
-		pRunsp->runAction(CCAnimate::create(animation));
-*/
 		CCSprite *props = CCSprite::create("props.png");
 		CCBlink *blinkAction = CCBlink::create(0.2,3);
 		CCMoveTo *moveAction = CCMoveTo::create(0.5, ccp(10, SCREEN_HEIGHT-10));
@@ -119,6 +106,20 @@ void Enermy::underAttack(int hp)
 		this->getParent()->addChild(props);
 		props->runAction(propsAction);
 	}
+	else
+	{
+		// 播放受击动画
+		CCActionInterval *shaky3DFX = CCShaky3D::create(0.5, CCSizeMake(15, 10), 5, false);
+		CCStopGrid *stopGrid = CCStopGrid::create();
+		CCCallFunc *pCallFunc = CCCallFunc::create(this, callfunc_selector(Enermy::underAttackEnd));
+		CCSequence *action = CCSequence::create(shaky3DFX, stopGrid, pCallFunc, NULL);
+		this->runAction(action);
+	}
+}
+
+void Enermy::underAttackEnd()
+{
+	m_controller->removeAttackedEnermy();
 }
 
 void Enermy::setController(GameController *controller)
@@ -172,7 +173,27 @@ void Enermy::attackEndEnd(float)
 
 void Enermy::die()
 {
+	setVisible(false);
+	// 播放掉金币特效
+	mpJinbiSprite = CCSprite::create("jinbi1.png");
+	mpJinbiSprite->setScale(2);
+	this->getParent()->addChild(mpJinbiSprite);
+	mpJinbiSprite->setPosition(this->getPosition());
+	CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("jinbi", 10, 0.2f, 1, CCRectMake(0, 0, 250, 250));
+	mpJinbiSprite->runAction(CCAnimate::create(animation));
+	scheduleOnce(schedule_selector(Enermy::dieEnd), 2);
+}
+
+void Enermy::dieEnd(float)
+{
 	this->setVisible(false);
+	if(mpJinbiSprite)
+	{
+		mpJinbiSprite->removeFromParentAndCleanup(true);
+	}
+
+	// 通知controller以进行下一步的攻击
+	m_controller->removeAttackedEnermy();
 }
 
 void Enermy::propsMoveEnd(CCNode *pSender, void *data)

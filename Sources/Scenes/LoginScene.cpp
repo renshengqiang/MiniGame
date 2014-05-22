@@ -103,8 +103,8 @@ void LoginScene::changescene(CCObject* pSender){
 	//CCDirector::sharedDirector()->replaceScene(s1);
 
 	////CCTransitionFade切换方式
-	//CCTransitionScene * s2=CCTransitionFade::create(2,scene2);
-	//CCDirector::sharedDirector()->replaceScene(s2);
+	CCTransitionScene * s2=CCTransitionFade::create(2,scene2);
+	CCDirector::sharedDirector()->replaceScene(s2);
 
 	////CCTransitionFadeBL切换方式
 	//CCTransitionScene * s3=CCTransitionFadeBL::create(2,scene2);
@@ -127,8 +127,8 @@ void LoginScene::changescene(CCObject* pSender){
 	//CCDirector::sharedDirector()->replaceScene(s7);
 
 	//CCTransitionFlipX切换方式
-	CCTransitionScene * s8=CCTransitionFlipX::create(1,scene2);
-	CCDirector::sharedDirector()->replaceScene(s8);
+	//CCTransitionScene * s8=CCTransitionFlipX::create(1,scene2);
+	//CCDirector::sharedDirector()->replaceScene(s8);
 
 	////CCTransitionFlipY切换方式
 	//CCTransitionScene * s9=CCTransitionFlipY::create(2,scene2);

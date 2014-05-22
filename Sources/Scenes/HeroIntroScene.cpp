@@ -151,8 +151,8 @@ bool HeroIntroScene::init()
 
 void HeroIntroScene::changescene(CCObject* pSender){
 	CCScene * scene2=GameScene::scene();
-	CCTransitionScene * s10=CCTransitionJumpZoom::create(1,scene2);
-	CCDirector::sharedDirector()->replaceScene(s10);
+	CCTransitionScene * s2=CCTransitionFade::create(2,scene2);
+	CCDirector::sharedDirector()->replaceScene(s2);
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
 }
 

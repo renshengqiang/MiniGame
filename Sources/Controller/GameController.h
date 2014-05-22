@@ -28,6 +28,8 @@ public:
 	void leaveFromAttacking(Entity *pAttackingEntity);
 	void addAttackingFriend();
 	void removeAttackingFriend();
+	void addAttackedEnermy();
+	void removeAttackedEnermy();
 
 	void friendsAttacked(Friend *pFriend,int hp);
 	void enermyAttacked(Enermy *pEnermy, int hp);
@@ -50,6 +52,7 @@ protected:
 	std::vector<Entity*> mEntityVec;		// 所有参与的Entities
 	Entity *mAttackingEntity;				// 当前正在进行攻击的Entity
 	int mAttackingFriendCnt;				// 正在攻击的友军数量
+	int mAttackedEnermyCnt;				// 正在受攻击的敌军数量
 
 private:
 	int mSpeedX, mSpeedY;

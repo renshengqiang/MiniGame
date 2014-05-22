@@ -27,13 +27,13 @@ CCAnimation* AnimationUtil::createAnimWithSingleFrameN( const char* name, float 
     return animation;
 }
 
-CCAnimation* AnimationUtil::createAnimWithFrameNameAndNum( const char* name, int iNum, float delay, unsigned int iLoops) {
+CCAnimation* AnimationUtil::createAnimWithFrameNameAndNum( const char* name, int iNum, float delay, unsigned int iLoops, CCRect rect) {
     CCArray* framesArray = CCArray::create();
     CCSpriteFrame* frame = NULL;
     int index = 1;
     for(int i = 1; i <= iNum; i++)
 	{
-		frame = CCSpriteFrame::create(CCString::createWithFormat("%d%d.png", name, i)->getCString(), CCRectMake(0, 0, 100, 100));
+		frame = CCSpriteFrame::create(CCString::createWithFormat("%s%d.png", name, i)->getCString(), rect);
         if(frame == NULL) 
 		{
             break;
@@ -42,7 +42,7 @@ CCAnimation* AnimationUtil::createAnimWithFrameNameAndNum( const char* name, int
     }
 
     CCAnimation* animation = CCAnimation::createWithSpriteFrames(framesArray);
-    animation->setLoops(1);
+    animation->setLoops(iLoops);
     //animation->setRestoreOriginalFrame(true);
     animation->setDelayPerUnit(delay);
 

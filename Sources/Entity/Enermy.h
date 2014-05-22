@@ -13,20 +13,23 @@ public:
 
 	virtual void attack();
 	virtual void underAttack(int hp);
+	void underAttackEnd();
 	virtual void setController(GameController *controller);
 
 	void setType(int type){ mType = type; }
-	void Enermy::attackTempEnd(float);
+	void attackTempEnd(float);
 	void attackEnd(float delta);
 	void attackEndEnd(float delta);
 	void die();
+	void dieEnd(float);
 	void propsMoveEnd(cocos2d::CCNode *pSender, void *data);
-	int getAttackHurt() { return mAttackHurt;}
+	int getAttackHurt() { return mAttackHurt; }
 private:
 	int mAttackHurt;	// 技能伤害值
 	int mType;
 	cocos2d::CCNode *mFXSprite;		//特效图片
 	Friend *mAttackedFriend;	//被攻击的敌人
+	cocos2d::CCSprite *mpJinbiSprite;
 };
 
 #endif

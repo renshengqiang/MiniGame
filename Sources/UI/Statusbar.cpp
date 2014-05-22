@@ -21,13 +21,13 @@ bool Statusbar::init()
 	mBGSprite->setPosition(ccp(360, 48));
 	CCNode::addChild(mBGSprite);
 
-	mBuff1 = CCLabelTTF::create("100/100", "Arial", 40);
+	mBuff1 = CCLabelTTF::create("0", "Arial", 40);
 	mBGSprite->addChild(mBuff1);
-	mBuff1->setPosition(ccp(170, 48));
+	mBuff1->setPosition(ccp(270, 48));
 
-	mBuff2 = CCLabelTTF::create("30", "Arial", 40);
+	mBuff2 = CCLabelTTF::create("0", "Arial", 40);
 	mBGSprite->addChild(mBuff2);
-	mBuff2->setPosition(ccp(370, 48));
+	mBuff2->setPosition(ccp(530, 48));
 
 	return true;
 }

@@ -41,7 +41,6 @@ private:
 	bool mTriggleFlag;		// 是否已经被触发过
 	cocos2d::CCParticleSystem *mParticleSystem; // 友情技能粒子系统
 	int	mLevel;				// 英雄等级
-	cocos2d::CCSprite*	mWeapon[3];		// 三种武器攻击效果
 };
 
 #endif

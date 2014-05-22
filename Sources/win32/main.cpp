@@ -17,6 +17,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     CCEGLView* eglView = CCEGLView::sharedOpenGLView();
     eglView->setViewName("MiniGame");
     eglView->setFrameSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-	eglView->setFrameZoomFactor(0.6);
+	eglView->setFrameZoomFactor(0.5);
     return CCApplication::sharedApplication()->run();
 }

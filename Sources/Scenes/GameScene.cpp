@@ -4,6 +4,8 @@
 #include "Controller\GameController.h"
 #include "Scenes\WinScene.h"
 #include "UI\Toolbar.h"
+#include "UI\Statusbar.h"
+#include "Effects\AnimationUtil.h"
 #include "Utils.h"
 #include "SimpleAudioEngine.h"
 
@@ -15,7 +17,8 @@ GameScene::GameScene():
 	mBGParent(NULL),
 	mBGsprite(NULL),
 	mBGsprite2(NULL),
-	mToolbar(NULL)
+	mToolbar(NULL),
+	mStatusbar(NULL)
 {
 }
 
@@ -39,34 +42,8 @@ CCScene* GameScene::scene()
 
 void GameScene::initWidget()
 {
-	CCMenuItemImage *pButton = CCMenuItemImage::create("Widget1_1.png", "Widget1_1.png",this, menu_selector(GameScene::onButton1));
-	pButton->setPosition(77, 71);
-	// create menu, it's an autorelease object
-    CCMenu* pMenu = CCMenu::create(pButton, NULL);
-    pMenu->setPosition(CCPointZero);
-    this->addChild(pMenu, 5);
-
-	pButton = CCMenuItemImage::create("Widget1_2.png", "Widget1_2.png",this, menu_selector(GameScene::onButton2));
-	pButton->setPosition(231, 71);
-	// create menu, it's an autorelease object
-    pMenu = CCMenu::create(pButton, NULL);
-    pMenu->setPosition(CCPointZero);
-    this->addChild(pMenu, 5);
-
-	pButton = CCMenuItemImage::create("Widget1_3.png", "Widget1_3.png",this, menu_selector(GameScene::onButton3));
-	pButton->setPosition(385, 71);
-	// create menu, it's an autorelease object
-    pMenu = CCMenu::create(pButton, NULL);
-    pMenu->setPosition(CCPointZero);
-    this->addChild(pMenu, 5);
-
-	pButton = CCMenuItemImage::create("Widget1_4.jpg", "Widget1_4.jpg",this, menu_selector(GameScene::onButton4));
-	pButton->setPosition(591, 71);
-	// create menu, it's an autorelease object
-    pMenu = CCMenu::create(pButton, NULL);
-    pMenu->setPosition(CCPointZero);
-    this->addChild(pMenu, 5);
-
+	mStatusbar = Statusbar::create();
+	this->addChild(mStatusbar, 5);
 	mToolbar = Toolbar::create();
 	this->addChild(mToolbar, 5);
 }
@@ -97,7 +74,7 @@ void GameScene::initPlayer()
 	for(int i=0; i<3; ++i)
 	{
 		pos[i].x = visibleSize.width/6*(2*i+1);
-		pos[i].y = FRIEND_SIZE + WIDGET_HEIGHT;
+		pos[i].y = FRIEND_SIZE + WIDGET_HEIGHT *4;
 	}
 
 	for(int i=0; i<3; ++i)
@@ -122,7 +99,7 @@ void GameScene::initPlayer()
 	pEnermy->setType(1);
 	pEnermy->setAttackHurt(30);
 	pEnermy->setController(mGameController);
-	epos.y = SCREEN_HEIGHT-100; epos.x = visibleSize.width*0.25;
+	epos.y = visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*0.25;
 	addEnermy(pEnermy, epos);
 
 	pEnermy = new Enermy("Enermy2.png");
@@ -131,7 +108,7 @@ void GameScene::initPlayer()
 	pEnermy->setAttackHurt(40);
 	pEnermy->setType(2);
 	pEnermy->setController(mGameController);
-	epos.y = SCREEN_HEIGHT-100; epos.x = visibleSize.width*0.75;
+	epos.y = visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*0.75;
 	addEnermy(pEnermy, epos);
 }
 
@@ -236,7 +213,7 @@ void GameScene::initLevel2()
 	pEnermy->setAttackHurt(30);
 	pEnermy->setType(1);
 	pEnermy->setController(mGameController);
-	epos.y = 2*SCREEN_HEIGHT-100; epos.x = visibleSize.width*(1.0/6);
+	epos.y = 2*visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*(1.0/6);
 	addEnermy(pEnermy, epos);
 	CCMoveBy *pMoveTo1 = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
 	pEnermy->runAction(pMoveTo1);
@@ -246,7 +223,7 @@ void GameScene::initLevel2()
 	pEnermy->setAttackHurt(60);
 	pEnermy->setType(2);
 	pEnermy->setController(mGameController);
-	epos.y = 2*SCREEN_HEIGHT-100; epos.x = visibleSize.width*(3.0/6);
+	epos.y = 2*visibleSize.height-7*WIDGET_HEIGHT; epos.x = visibleSize.width*(3.0/6);
 	addEnermy(pEnermy, epos);
 	CCMoveBy *pMoveTo2 = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
 	pEnermy->runAction(pMoveTo2);
@@ -256,7 +233,7 @@ void GameScene::initLevel2()
 	pEnermy->setAttackHurt(30);
 	pEnermy->setType(1);
 	pEnermy->setController(mGameController);
-	epos.y = 2*SCREEN_HEIGHT-100; epos.x = visibleSize.width*(5.0/6);
+	epos.y = 2*visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*(5.0/6);
 	addEnermy(pEnermy, epos);
 	CCMoveBy *pMoveTo3 = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
 	pEnermy->runAction(pMoveTo3);
@@ -285,7 +262,7 @@ void GameScene::initLevel3()
 	pEnermy->setAttackHurt(100);
 	pEnermy->setType(3);
 	pEnermy->setController(mGameController);
-	epos.y = 2*SCREEN_HEIGHT-100; epos.x = visibleSize.width*(3.0/6);
+	epos.y = 2*visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*(3.0/6);
 	addEnermy(pEnermy, epos);
 	CCMoveBy *pMoveTo = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
 	pEnermy->runAction(pMoveTo);
