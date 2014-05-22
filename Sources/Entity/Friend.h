@@ -23,6 +23,7 @@ public:
 	
 	virtual void attack();	//普通技能
 	void attackEnd();		// 技能释放结束
+	void attackEndEnd();
 	void attack2();			//友情技能
 	void attack2End(float); //友情技能释放结束
 	virtual void underAttack(int hp);
@@ -41,6 +42,7 @@ private:
 	bool mTriggleFlag;		// 是否已经被触发过
 	cocos2d::CCParticleSystem *mParticleSystem; // 友情技能粒子系统
 	int	mLevel;				// 英雄等级
+	int mAttackCnt;			// n连击统计
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "SimpleAudioEngine.h"
 #include "Effects\LightBunch.h"
+#include "Effects\FlowWord.h"
 
 USING_NS_CC;
 using namespace cocos2d::extension;
@@ -138,12 +139,15 @@ void Friend::update(float delta)
 			setAttackSpeed(reflectedVelocity.x, reflectedVelocity.y);
 			
 			m_controller->enermyAttacked(pConflictedEnermy, mAttack1Hurt);
-
+			mAttackCnt++;
 			return;
 		}
 		else if(pConflictedEnermy != NULL)
 		{
+			if(mLastConflictedEntity == pConflictedEnermy) return;
+			mLastConflictedEntity = pConflictedEnermy;
 			m_controller->enermyAttacked(pConflictedEnermy, mAttack1Hurt);
+			mAttackCnt++;
 		}
 
 		CCPoint normalVec;
@@ -171,6 +175,7 @@ void Friend::attack()
 	m_attacking = true;
 	m_activated = false;
 	mLastConflictedEntity = NULL;
+	mAttackCnt = 0;
 
 	switch(mLevel)
 	{
@@ -188,9 +193,20 @@ void Friend::attack()
 
 void Friend::attackEnd()
 {
+	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	m_attacking = false;
 	m_activated = false;
 	m_controller->leaveFromAttacking(this);
+
+	/*¿ÛÑªÆ®×ÖÐ§¹û*/
+	if(mAttackCnt > 1)
+	{
+		char str[1024];
+		sprintf(str, "%d Hits\n", mAttackCnt);
+		FlowWord *pFlowWord = FlowWord::create();
+		this->getParent()->addChild(pFlowWord);
+		pFlowWord->showWord(str, CCPoint(visibleSize.width/2, visibleSize.height/2));
+	}
 }
 
 void Friend::attack2()

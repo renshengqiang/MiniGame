@@ -303,14 +303,13 @@ void  GameController::removeAttackingFriend()
 void GameController::addAttackedEnermy()
 {
 	++mAttackedEnermyCnt;
-	CCLog("++++++++++++add\n");
+
 }
 
 void GameController::removeAttackedEnermy()
 {
 	--mAttackedEnermyCnt;
 	leaveFromAttacking(NULL);
-	CCLog("-----------remove\n");
 }
 /*
 ** 怪物发动攻击，主角和友军会同时受到攻击
