@@ -54,13 +54,13 @@ bool LoginScene::init()
 	*/
 
 	 CCMenuItemImage *pEnterItem_WX = CCMenuItemImage::create(
-                                        "WXLogin.png",
-                                        "WXLoginSelected.png",
+                                        "WeiXinLogin.png",
+                                        "WeiXinLoginSelected.png",
                                         this,
                                         menu_selector(LoginScene::changescene));
     
 	pEnterItem_WX->setPosition(ccp(origin.x + visibleSize.width/2-150,
-                            origin.y + visibleSize.height/2-200));
+                            origin.y + visibleSize.height/2-440));
 
     // create menu, it's an autorelease object
     CCMenu* pMenu_WX = CCMenu::create(pEnterItem_WX, NULL);
@@ -74,7 +74,7 @@ bool LoginScene::init()
                                         menu_selector(LoginScene::changescene));
     
 	pEnterItem_QQ->setPosition(ccp(origin.x + visibleSize.width/2+150,
-                            origin.y + visibleSize.height/2-200));
+                            origin.y + visibleSize.height/2-440));
     // create menu, it's an autorelease object
     CCMenu* pMenu_QQ = CCMenu::create(pEnterItem_QQ, NULL);
     pMenu_QQ->setPosition(CCPointZero);

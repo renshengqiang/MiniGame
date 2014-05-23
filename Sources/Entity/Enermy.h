@@ -24,10 +24,14 @@ public:
 	void dieEnd(float);
 	void propsMoveEnd(cocos2d::CCNode *pSender, void *data);
 	int getAttackHurt() { return mAttackHurt; }
+
+	float getRadius() { return mRadius; }
+	void setRadius(float radius) { mRadius = radius; }
 private:
 	int mAttackHurt;	// 技能伤害值
-	int mType;
-	cocos2d::CCNode *mFXSprite;		//特效图片
+	int mType;			// Entity类型
+	float mRadius;		// 角色的半径大小
+	cocos2d::CCNode *mFXSprite;	//特效图片
 	Friend *mAttackedFriend;	//被攻击的敌人
 	cocos2d::CCSprite *mpJinbiSprite;
 };

@@ -38,12 +38,12 @@ bool ModeSelectScene::init()
     //    you may modify it.
 
 	 CCMenuItemImage *pEnterItem_WX = CCMenuItemImage::create(
-                                        "InfMode.png",
-                                        "InfModeSel.png",
+                                        "StoryMode.png",
+                                        "StoryModeSelected.png",
                                         this,
                                         menu_selector(ModeSelectScene::changescene));
     
-	pEnterItem_WX->setPosition(ccp(origin.x + visibleSize.width/2-120,
+	pEnterItem_WX->setPosition(ccp(origin.x + visibleSize.width/2-150,
                             origin.y + visibleSize.height/2-200));
 
     // create menu, it's an autorelease object
@@ -52,44 +52,55 @@ bool ModeSelectScene::init()
     this->addChild(pMenu_WX, 1);
 
 	CCMenuItemImage *pEnterItem_QQ = CCMenuItemImage::create(
-                                        "StoryMode.png",
-                                        "StoryModeSel.png",
+                                        "HeroMode.png",
+                                        "HeroModeSelected.png",
                                         this,
                                         menu_selector(ModeSelectScene::changescene));
     
-	pEnterItem_QQ->setPosition(ccp(origin.x + visibleSize.width/2+120,
+	pEnterItem_QQ->setPosition(ccp(origin.x + visibleSize.width/2+150,
                             origin.y + visibleSize.height/2-200));
     // create menu, it's an autorelease object
     CCMenu* pMenu_QQ = CCMenu::create(pEnterItem_QQ, NULL);
     pMenu_QQ->setPosition(CCPointZero);
     this->addChild(pMenu_QQ, 1);
 
-
+	CCMenuItemImage *pEnterItem_Re = CCMenuItemImage::create(
+                                        "Return.png",
+                                        "ReturnSelected.png",
+                                        this,
+                                        menu_selector(ModeSelectScene::changescene2login));
+    
+	pEnterItem_Re->setPosition(ccp(origin.x + visibleSize.width/2+180,
+                            origin.y + visibleSize.height/2-400));
+    // create menu, it's an autorelease object
+    CCMenu* pMenu_Re = CCMenu::create(pEnterItem_Re, NULL);
+    pMenu_Re->setPosition(CCPointZero);
+    this->addChild(pMenu_Re, 1);
     /////////////////////////////
     // 3. add your codes below...
 
 	
 	CCSize mysize=CCDirector::sharedDirector()->getWinSize();
-	CCSprite* sp = CCSprite::create("ModelSelect.png");
+	CCSprite* sp = CCSprite::create("ModeSelectedBG.png");
 	sp->setPosition(ccp(mysize.width/2, mysize.height/2));
 	//设置不同颜色区分
 	sp->setColor(ccc3(100,100,100));
 	this->addChild(sp, 0);
 
-	CCSprite* sp1 = CCSprite::create("Primitve.png");
+	/*CCSprite* sp1 = CCSprite::create("Primitve.png");
 	sp1->setPosition(ccp(mysize.width/2-154, mysize.height/2+200));
-	this->addChild(sp1, 2);
+	this->addChild(sp1, 2);*/
 
-	CCSprite* sp2 = CCSprite::create("Modern.png");
+	CCSprite* sp2 = CCSprite::create("AllHero.png");
 	sp2->setPosition(ccp(mysize.width/2, mysize.height/2+200));
 	this->addChild(sp2, 2);
 
-	CCSprite* sp3 = CCSprite::create("ScieneFiction.png");
+	/*CCSprite* sp3 = CCSprite::create("ScieneFiction.png");
 	sp3->setPosition(ccp(mysize.width/2+154, mysize.height/2+200));
-	this->addChild(sp3, 2);
+	this->addChild(sp3, 2);*/
 
-	CCSprite* sp4 = CCSprite::create("HeroChi.png");
-	sp4->setPosition(ccp(mysize.width/2, mysize.height/2));
+	CCSprite* sp4 = CCSprite::create("HeroStory.png");
+	sp4->setPosition(ccp(mysize.width/2, mysize.height/2-70));
 	this->addChild(sp4, 2);
     
     return true;
@@ -98,6 +109,13 @@ bool ModeSelectScene::init()
 
 void ModeSelectScene::changescene(CCObject * obj){
 	CCScene * scene1=HeroIntroScene::scene();
+	CCTransitionScene * ss=CCTransitionCrossFade::create(1,scene1);
+	CCDirector::sharedDirector()->replaceScene(ss);
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
+}
+
+void ModeSelectScene::changescene2login(CCObject * obj){
+	CCScene * scene1=LoginScene::scene();
 	CCTransitionScene * ss=CCTransitionCrossFade::create(1,scene1);
 	CCDirector::sharedDirector()->replaceScene(ss);
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");

@@ -3,6 +3,7 @@
 #include "Entity\Enermy.h"
 #include "Scenes\WinScene.h"
 #include "Scenes\GameScene.h"
+#include "Scenes\CombatResultsScene.h"
 #include "UI\Toolbar.h"
 #include "Utils.h"
 #include "SimpleAudioEngine.h"
@@ -235,7 +236,9 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 	if(true == endFlag)
 	{
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("GameFail.mp3");
-		// TODO:µ¯³öÊ§°Ü½çÃæ
+
+		CCScene *pScene = CombatResultsScene::scene();
+		CCDirector::sharedDirector()->replaceScene(pScene);
 	}
 
 

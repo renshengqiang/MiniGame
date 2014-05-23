@@ -1,6 +1,7 @@
 #include "Scenes\HeroIntroScene.h"
 #include "Scenes\ModeSelectScene.h"
 #include "Scenes\GameScene.h"
+#include "Scenes\GameLevelSelectScene.h"
 using namespace cocos2d;
 
 USING_NS_CC;
@@ -38,8 +39,8 @@ bool HeroIntroScene::init()
     //    you may modify it.
 
 	 CCMenuItemImage *pEnterItem_WX = CCMenuItemImage::create(
-                                        "Upgrade.png",
-                                        "UpgradeSel.png",
+                                        "Leveled.png",
+                                        "LeveledSelected.png",
                                         this,
                                         0);
     
@@ -52,8 +53,8 @@ bool HeroIntroScene::init()
     this->addChild(pMenu_WX, 1);
 
 	CCMenuItemImage *pEnterItem_QQ = CCMenuItemImage::create(
-                                        "Evolution.png",
-                                        "EvolutionSel.png",	
+                                        "Envolution.png",
+                                        "EnvolutionSelected.png",	
                                         this,
                                         0);
     
@@ -65,8 +66,8 @@ bool HeroIntroScene::init()
     this->addChild(pMenu_QQ, 1);
 
 	 CCMenuItemImage *pEnterItem1 = CCMenuItemImage::create(
-                                        "Fight.png",
-                                        "FightSel.png",
+                                        "Battle.png",
+                                        "BattleSelected.png",
                                         this,
                                         menu_selector(HeroIntroScene::changescene));
     
@@ -80,7 +81,7 @@ bool HeroIntroScene::init()
 
 	CCMenuItemImage *pEnterItem2 = CCMenuItemImage::create(
                                         "Return.png",
-                                        "ReturnSel.png",
+                                        "ReturnSelected.png",
                                         this,
                                         menu_selector(HeroIntroScene::changescene_return));
     
@@ -129,19 +130,19 @@ bool HeroIntroScene::init()
 	sp->setColor(ccc3(100,100,100));
 	this->addChild(sp, 0);
 
-	CCSprite* sp5 = CCSprite::create("Widget1_1.png");
-	sp5->setPosition(ccp(mysize.width/2-154, mysize.height/2+400));
+	CCSprite* sp5 = CCSprite::create("Hero1.png");
+	sp5->setPosition(ccp(mysize.width/2-154, mysize.height/2+450));
 	this->addChild(sp5, 0);
 
-	CCSprite* sp6 = CCSprite::create("Widget1_2.png");
-	sp6->setPosition(ccp(mysize.width/2, mysize.height/2+400));
+	CCSprite* sp6 = CCSprite::create("Hero2.png");
+	sp6->setPosition(ccp(mysize.width/2, mysize.height/2+450));
 	this->addChild(sp6, 0);
 
-	CCSprite* sp7 = CCSprite::create("Widget1_3.png");
-	sp7->setPosition(ccp(mysize.width/2+154, mysize.height/2+400));
+	CCSprite* sp7 = CCSprite::create("Hero3.png");
+	sp7->setPosition(ccp(mysize.width/2+154, mysize.height/2+450));
 	this->addChild(sp7, 0);
 
-	CCSprite* sp8 = CCSprite::create("CMPrimitive.png");
+	CCSprite* sp8 = CCSprite::create("HeroIntro1.png");
 	sp8->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 	this->addChild(sp8, 0);
 
@@ -150,7 +151,7 @@ bool HeroIntroScene::init()
 
 
 void HeroIntroScene::changescene(CCObject* pSender){
-	CCScene * scene2=GameScene::scene();
+	CCScene * scene2=GameLevelSelectScene::scene();
 	CCTransitionScene * s2=CCTransitionFade::create(2,scene2);
 	CCDirector::sharedDirector()->replaceScene(s2);
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
@@ -171,28 +172,28 @@ void HeroIntroScene::changescene_left(CCObject* pSender){
 	switch(m){
 	case 0:
 		{
-			CCSprite* sp1 = CCSprite::create("CMPrimitive1.png");
+			CCSprite* sp1 = CCSprite::create("HeroIntro1.png");
 			sp1->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp1, 2);
 			break;
 		}
 	case 1:
 		{
-			CCSprite* sp2 = CCSprite::create("Science2.png");
+			CCSprite* sp2 = CCSprite::create("HeroIntro1.png");
 			sp2->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp2, 2);
 			break;
 		}
 	case 2:
 		{
-			CCSprite* sp3 = CCSprite::create("Sivel3.png");
+			CCSprite* sp3 = CCSprite::create("HeroIntro1.png");
 			sp3->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp3, 2);
 			break;
 		}
 	case 3:
 		{
-			CCSprite* sp4 = CCSprite::create("Bird4.png");
+			CCSprite* sp4 = CCSprite::create("HeroIntro1.png");
 			sp4->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp4, 2);
 			break;
@@ -209,28 +210,28 @@ void HeroIntroScene::changescene_right(CCObject* pSender){
 	switch(m){
 	case 0:
 		{
-			CCSprite* sp1 = CCSprite::create("CMPrimitive1.png");
+			CCSprite* sp1 = CCSprite::create("HeroIntro1.png");
 			sp1->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp1, 2);
 			break;
 		}
 	case 1:
 		{
-			CCSprite* sp2 = CCSprite::create("Science2.png");
+			CCSprite* sp2 = CCSprite::create("HeroIntro1.png");
 			sp2->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp2, 2);
 			break;
 		}
 	case 2:
 		{
-			CCSprite* sp3 = CCSprite::create("Sivel3.png");
+			CCSprite* sp3 = CCSprite::create("HeroIntro1.png");
 			sp3->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp3, 2);
 			break;
 		}
 	case 3:
 		{
-			CCSprite* sp4 = CCSprite::create("Bird4.png");
+			CCSprite* sp4 = CCSprite::create("HeroIntro1.png");
 			sp4->setPosition(ccp(mysize.width/2, mysize.height/2+20));
 			this->addChild(sp4, 2);
 			break;

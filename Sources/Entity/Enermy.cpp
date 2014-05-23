@@ -49,7 +49,6 @@ void Enermy::attack()
 			pArrow->show(this->getPosition(), mAttackedFriend->getPosition());
 			mFXSprite = pArrow;
 			scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
-			//scheduleOnce(schedule_selector(Enermy::attackTempEnd), 0.3*ENERMY_ATTACK_TIME);
 		}
 		break;
 	case 2:
@@ -67,7 +66,6 @@ void Enermy::attack()
 		m_particleSystem = CCParticleExplosion::create();
 		m_particleSystem->setDuration(ENERMY_ATTACK_TIME);
 		m_particleSystem->setLife(ENERMY_ATTACK_TIME);
-		CCLog("speed %f\n", m_particleSystem->getSpeed());
 		m_particleSystem->setSpeed(m_particleSystem->getSpeed() * 4);
 		m_particleSystem->setTexture(CCTextureCache::sharedTextureCache()->addImage("fire.png"));
 		m_particleSystem->setAutoRemoveOnFinish(true);
@@ -154,7 +152,6 @@ void Enermy::attackEnd(float)
 	{
 		mFXSprite->getParent()->removeChild(mFXSprite);
 		m_controller->friendsAttacked(mAttackedFriend, mAttackHurt);
-
 	}
 	else
 	{

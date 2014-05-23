@@ -3,6 +3,7 @@
 #include "Entity\Enermy.h"
 #include "Controller\GameController.h"
 #include "Scenes\WinScene.h"
+#include "Scenes\CombatResultsScene.h"
 #include "UI\Toolbar.h"
 #include "UI\Statusbar.h"
 #include "Effects\AnimationUtil.h"
@@ -126,23 +127,6 @@ void GameScene::addEnermy(Enermy *pEnermy, const CCPoint &pos)
 	mEnermyVec.push_back(pEnermy);
 }
 
-void GameScene::onButton1(CCObject *pSender)
-{
-	CCLOG("button1 clicked\n");
-}
-void GameScene::onButton2(CCObject *pSender)
-{
-	CCLOG("button2 clicked\n");
-}
-void GameScene::onButton3(CCObject *pSender)
-{
-	CCLOG("button3 clicked\n");
-}
-void GameScene::onButton4(CCObject *pSender)
-{
-	CCLOG("button4 clicked\n");
-}
-
 void GameScene::increaseLevel()
 {
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
@@ -177,9 +161,10 @@ void GameScene::increaseLevel()
 	}
 	else
 	{
-		// TODO: 胜利，弹出胜利界面
-		CCScene *pScene = WinScene::scene();
+		//CCScene *pScene = WinScene::scene();
+		CCScene *pScene = CombatResultsScene::scene();
 		CCDirector::sharedDirector()->replaceScene(pScene);
+		
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossDie.wav");
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("GameSuccess.mp3", true);
 	}

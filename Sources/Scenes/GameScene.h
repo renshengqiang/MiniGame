@@ -30,10 +30,6 @@ private:
 	void addEnermy(Enermy *pEnermy, const cocos2d::CCPoint &pos);
 	void moveEnd();
 
-	void onButton1(CCObject *pSender);
-	void onButton2(CCObject *pSender);
-	void onButton3(CCObject *pSender);
-	void onButton4(CCObject *pSender);
 private:
 	cocos2d::CCNode *mBGParent;		 //±³¾°µÄ¸¸½Úµã
 	cocos2d::CCSprite *mBGsprite;	 // ±³¾°
