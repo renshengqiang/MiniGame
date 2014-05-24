@@ -19,7 +19,7 @@ public:
 
 	void changescene(CCObject* pSender);
 
-	void GameLevelSelectScene::changescene2HeroSelect(CCObject* pSender);
+	void changescene2HeroSelect(CCObject* pSender);
 	//创建3个生命周期函数
 	virtual void onEnter();
 	virtual void onEnterTransitionDidFinish();

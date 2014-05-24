@@ -4,6 +4,11 @@
 const int FRIEND_SIZE = 100;
 const int BOSS_SIZE = 150;
 
+const int FRIEND_RADIUS = 73;
+const int ENERMY1_RADIUS = 105;
+const int ENERMY2_RADIUS = 120;
+const int BOSS_RADIUS = 135;
+
 const int SCREEN_WIDTH = 720;
 const int SCREEN_HEIGHT = 1280;
 
@@ -19,6 +24,6 @@ const float DIE_TIME = 1.0f;
 
 const float MAX_LIFE_TIME = 3.0f;
 
-const int WIDGET_HEIGHT = 96;
+const int WIDGET_HEIGHT = 120;
 
 #endif

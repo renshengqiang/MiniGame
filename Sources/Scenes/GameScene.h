@@ -8,8 +8,6 @@ class Friend;
 class Entity;
 class Enermy;
 class GameController;
-class Toolbar;
-class Statusbar;
 class GameScene : public cocos2d::CCLayer
 {
 	friend class GameController;
@@ -38,8 +36,8 @@ private:
 	std::vector<Enermy*> mEnermyVec; // 敌人
 	int mLevel;						 // 目前的游戏等级
 	GameController *mGameController; // 游戏控制器
-	Toolbar *mToolbar;
-	Statusbar *mStatusbar;
+	//Toolbar *mToolbar;
+	//Statusbar *mStatusbar;
 };
 
 

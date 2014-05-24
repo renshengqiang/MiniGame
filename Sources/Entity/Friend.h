@@ -43,6 +43,7 @@ private:
 	cocos2d::CCParticleSystem *mParticleSystem; // 友情技能粒子系统
 	int	mLevel;				// 英雄等级
 	int mAttackCnt;			// n连击统计
+	cocos2d::CCSprite *mFxSprite;	// 攻击特效
 };
 
 #endif

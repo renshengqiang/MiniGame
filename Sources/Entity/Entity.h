@@ -33,6 +33,9 @@ public:
 	virtual void setTagPosition(int x, int y);
 	virtual cocos2d::CCPoint getTagPosition();
 
+	void setSize(int size) { m_size = size; }
+	int getSize() { return m_size; }
+
 protected:
 	int m_hp;						// 血量
 	int m_fullHp;					// 健康状态下的血量
@@ -45,7 +48,7 @@ protected:
 	bool m_attacking;				// 当前自己是否是攻击者
 	bool m_autoAttack;				// 是否是主动攻击对象
 	cocos2d::CCParticleSystem *m_particleSystem;	//攻击特效
-
+	int m_size;						// 半径大小
 	bool flag;						// 临时变量，用于对当前活跃对象进行闪烁
 };
 

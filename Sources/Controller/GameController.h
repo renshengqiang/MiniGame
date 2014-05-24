@@ -6,7 +6,8 @@
 class Entity;
 class Friend;
 class Enermy;
-class Toolbar;
+//class Toolbar;
+//class Statusbar;
 class GameController : public cocos2d::CCLayer
 {
 public:
@@ -29,7 +30,7 @@ public:
 	void addAttackingFriend();
 	void removeAttackingFriend();
 	void addAttackedEnermy();
-	void removeAttackedEnermy();
+	void removeAttackedEnermy(Enermy *pEnermy);
 
 	void friendsAttacked(Friend *pFriend,int hp);
 	void enermyAttacked(Enermy *pEnermy, int hp);
@@ -39,7 +40,8 @@ public:
 	void clearEnermy();
 	void resetNewLevel();
 
-	void setToolbar(Toolbar *pToolbar) { mToolbar = pToolbar; }
+	//void setToolbar(Toolbar *pToolbar) { mToolbar = pToolbar; }
+	//void setStatusbar(Statusbar *pStatusbar) { mStatusbar = pStatusbar; }
 	// 触屏事件处理函数
 	virtual void registerWithTouchDispatcher();
 	virtual bool ccTouchBegan(cocos2d::CCTouch *pTouch, cocos2d::CCEvent *pEvent);
@@ -60,7 +62,8 @@ private:
 	cocos2d::CCSprite *mpArrowSprite;
 	bool mIsAttacking;			// 当前是否已经在进行攻击
 	bool mIsFingerDown;			// 用于禁止多点触摸
-	Toolbar *mToolbar;			// 道具栏
+	//Toolbar *mToolbar;			// 道具栏
+	//Statusbar *mStatusbar;		// 状态栏
 };
 
 #endif

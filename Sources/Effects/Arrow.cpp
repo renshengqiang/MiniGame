@@ -5,7 +5,7 @@ bool Arrow::init()
 {
 	for(int i=0; i<3; ++i)
 	{
-		mSprite[i] = CCSprite::create("arrow.png"); //10ÏñËØ³¤£¬20ÏñËØ¿í
+		mSprite[i] = CCSprite::create("EnermyAttack1.png"); //10ÏñËØ³¤£¬20ÏñËØ¿í
 		mSprite[i]->setVisible(false);
 		this->addChild(mSprite[i]);
 	}

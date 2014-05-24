@@ -17,9 +17,7 @@ using namespace std;
 GameScene::GameScene():
 	mBGParent(NULL),
 	mBGsprite(NULL),
-	mBGsprite2(NULL),
-	mToolbar(NULL),
-	mStatusbar(NULL)
+	mBGsprite2(NULL)
 {
 }
 
@@ -43,10 +41,14 @@ CCScene* GameScene::scene()
 
 void GameScene::initWidget()
 {
-	mStatusbar = Statusbar::create();
-	this->addChild(mStatusbar, 5);
-	mToolbar = Toolbar::create();
-	this->addChild(mToolbar, 5);
+	//mStatusbar = Statusbar::create();
+	//this->addChild(mStatusbar, 5);
+	//mToolbar = Toolbar::create();
+	//this->addChild(mToolbar, 5);
+	CCSprite *showSprite = CCSprite::create("show.png");
+	this->addChild(showSprite, 5);
+	showSprite->setPosition(ccp(SCREEN_WIDTH/2, WIDGET_HEIGHT/2));
+
 }
 
 void GameScene::initBackground()
@@ -68,7 +70,9 @@ void GameScene::initPlayer()
 	mGameController = GameController::create();
 	CCLayer::addChild(mGameController);
 
-	mGameController->setToolbar(mToolbar);
+	//mGameController->setToolbar(mToolbar);
+	//mGameController->setStatusbar(mStatusbar);
+
 	// 创建2个Friends
 	CCPoint pos[3];
 	char *friendFileName[3] = {"Hero.png", "Friend1.png", "Friend2.png"};
@@ -83,10 +87,11 @@ void GameScene::initPlayer()
 		Friend *pFriend = new Friend(friendFileName[i]);
 		addFriend(pFriend, pos[i]);
 		pFriend->increaseLevel();
+		pFriend->setSize(FRIEND_RADIUS);
 		pFriend->setController(mGameController);
 	}
 	mGameController->setAttackingEntity(mFriendVec[0]);
-	mToolbar->setEntity(mFriendVec[0]);
+	//mToolbar->setEntity(mFriendVec[0]);
 	mFriendVec[1]->increaseLevel();
 	mFriendVec[2]->increaseLevel();
 	mFriendVec[2]->increaseLevel();
@@ -96,20 +101,20 @@ void GameScene::initPlayer()
 	Enermy *pEnermy = new Enermy("Enermy1.png");
 	CCPoint epos;
 	pEnermy->setHp(200);
-	pEnermy->setScale(0.91, 1.1);
 	pEnermy->setType(1);
 	pEnermy->setAttackHurt(30);
+	pEnermy->setSize(ENERMY1_RADIUS);
 	pEnermy->setController(mGameController);
-	epos.y = visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*0.25;
+	epos.y = visibleSize.height-480; epos.x = visibleSize.width*0.25;
 	addEnermy(pEnermy, epos);
 
 	pEnermy = new Enermy("Enermy2.png");
 	pEnermy->setHp(200);
-	pEnermy->setScale(0.91, 1.1);
+	pEnermy->setSize(ENERMY2_RADIUS);
 	pEnermy->setAttackHurt(40);
 	pEnermy->setType(2);
 	pEnermy->setController(mGameController);
-	epos.y = visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*0.75;
+	epos.y = visibleSize.height-480; epos.x = visibleSize.width*0.75;
 	addEnermy(pEnermy, epos);
 }
 
@@ -132,7 +137,7 @@ void GameScene::increaseLevel()
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	if(1 == mLevel)			//从一级升到二级
 	{
-		mBGsprite2 = CCSprite::create("GameBG_Level2.png");
+		mBGsprite2 = CCSprite::create("GameBG.png");
 		mBGParent->addChild(mBGsprite2, 0);
 		mBGsprite2->setPosition(ccp(0, visibleSize.height));
 		initLevel2();
@@ -145,7 +150,7 @@ void GameScene::increaseLevel()
 	}
 	else if(2 == mLevel)
 	{
-		mBGsprite2 = CCSprite::create("GameBG_Level2.png");
+		mBGsprite2 = CCSprite::create("GameBG.png");
 		mBGParent->addChild(mBGsprite2, 0);
 		mBGsprite2->setPosition(ccp(0, 2*visibleSize.height));
 
@@ -161,11 +166,9 @@ void GameScene::increaseLevel()
 	}
 	else
 	{
-		//CCScene *pScene = WinScene::scene();
 		CCScene *pScene = CombatResultsScene::scene();
 		CCDirector::sharedDirector()->replaceScene(pScene);
 		
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossDie.wav");
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("GameSuccess.mp3", true);
 	}
 
@@ -197,8 +200,9 @@ void GameScene::initLevel2()
 	pEnermy->setHp(800);
 	pEnermy->setAttackHurt(30);
 	pEnermy->setType(1);
+	pEnermy->setSize(ENERMY1_RADIUS);
 	pEnermy->setController(mGameController);
-	epos.y = 2*visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*(1.0/6);
+	epos.y = 2*visibleSize.height-480; epos.x = visibleSize.width*(1.0/6);
 	addEnermy(pEnermy, epos);
 	CCMoveBy *pMoveTo1 = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
 	pEnermy->runAction(pMoveTo1);
@@ -207,8 +211,9 @@ void GameScene::initLevel2()
 	pEnermy->setHp(800);
 	pEnermy->setAttackHurt(60);
 	pEnermy->setType(2);
+	pEnermy->setSize(ENERMY2_RADIUS);
 	pEnermy->setController(mGameController);
-	epos.y = 2*visibleSize.height-7*WIDGET_HEIGHT; epos.x = visibleSize.width*(3.0/6);
+	epos.y = 2*visibleSize.height-670; epos.x = visibleSize.width*(3.0/6);
 	addEnermy(pEnermy, epos);
 	CCMoveBy *pMoveTo2 = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
 	pEnermy->runAction(pMoveTo2);
@@ -217,8 +222,9 @@ void GameScene::initLevel2()
 	pEnermy->setHp(800);
 	pEnermy->setAttackHurt(30);
 	pEnermy->setType(1);
+	pEnermy->setSize(ENERMY1_RADIUS);
 	pEnermy->setController(mGameController);
-	epos.y = 2*visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*(5.0/6);
+	epos.y = 2*visibleSize.height-480; epos.x = visibleSize.width*(5.0/6);
 	addEnermy(pEnermy, epos);
 	CCMoveBy *pMoveTo3 = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
 	pEnermy->runAction(pMoveTo3);
@@ -246,8 +252,9 @@ void GameScene::initLevel3()
 	pEnermy->setHp(2000);
 	pEnermy->setAttackHurt(100);
 	pEnermy->setType(3);
+	pEnermy->setSize(BOSS_RADIUS);
 	pEnermy->setController(mGameController);
-	epos.y = 2*visibleSize.height-5*WIDGET_HEIGHT; epos.x = visibleSize.width*(3.0/6);
+	epos.y = 2*visibleSize.height-480; epos.x = visibleSize.width*(3.0/6);
 	addEnermy(pEnermy, epos);
 	CCMoveBy *pMoveTo = CCMoveBy::create(2.0f, ccp(0, -visibleSize.height));
 	pEnermy->runAction(pMoveTo);

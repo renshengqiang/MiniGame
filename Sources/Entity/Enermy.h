@@ -20,13 +20,17 @@ public:
 	void attackTempEnd(float);
 	void attackEnd(float delta);
 	void attackEndEnd(float delta);
-	void die();
+	void die(float);
 	void dieEnd(float);
 	void propsMoveEnd(cocos2d::CCNode *pSender, void *data);
 	int getAttackHurt() { return mAttackHurt; }
 
 	float getRadius() { return mRadius; }
 	void setRadius(float radius) { mRadius = radius; }
+
+	int getBuff1() { return m_fullHp; }
+	int getBuff2() { if(mType>2) return 1; else return 0;}
+
 private:
 	int mAttackHurt;	// 技能伤害值
 	int mType;			// Entity类型

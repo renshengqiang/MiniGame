@@ -74,6 +74,29 @@ void Entity::setActive(bool active)
 
 void Entity::update(float delta)
 {
+	if(m_activated)
+	{
+		m_magicTime += delta;
+		if(NULL == m_magicSprite)
+		{
+			m_magicSprite = CCSprite::create("EnermyMagic.png");
+			m_magicSprite->setPosition(CCNode::getPosition());
+			CCNode::getParent()->addChild(m_magicSprite, 1);		//放在英雄下面
+		}
+		else
+		{
+			m_magicSprite->setRotation(m_magicTime*180);
+		}
+	}
+	else
+	{
+		if(m_magicSprite != NULL)
+		{
+			m_magicSprite->getParent()->removeChild(m_magicSprite, true);
+			m_magicSprite = NULL;
+			m_magicTime = 0;
+		}
+	}
 }
 
 void Entity::setController(GameController *controller)

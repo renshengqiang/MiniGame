@@ -84,6 +84,9 @@
     <ClCompile Include="Sources\Scenes\GameLevelSelectScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Effects\FlowWord2.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\win32\main.h">
@@ -149,6 +152,9 @@
     </ClInclude>
     <ClInclude Include="Sources\Scenes\GameLevelSelectScene.h">
       <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Effects\FlowWord2.h">
+      <Filter>Effects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

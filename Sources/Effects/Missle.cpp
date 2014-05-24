@@ -4,7 +4,7 @@ USING_NS_CC;
 bool Missle::init()
 {
 
-	mSprite = CCSprite::create("missle.png");
+	mSprite = CCSprite::create("EnermyAttack2.png");
 	mSprite->setVisible(false);
 	this->addChild(mSprite);
 

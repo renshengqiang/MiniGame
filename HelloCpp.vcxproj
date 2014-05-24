@@ -133,6 +133,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="Sources\Effects\AnimationUtil.cpp" />
     <ClCompile Include="Sources\Effects\Arrow.cpp" />
     <ClCompile Include="Sources\Effects\FlowWord.cpp" />
+    <ClCompile Include="Sources\Effects\FlowWord2.cpp" />
     <ClCompile Include="Sources\Effects\LightBunch.cpp" />
     <ClCompile Include="Sources\Effects\Missle.cpp" />
     <ClCompile Include="Sources\Entity\Enermy.cpp" />
@@ -156,6 +157,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="Sources\Effects\AnimationUtil.h" />
     <ClInclude Include="Sources\Effects\Arrow.h" />
     <ClInclude Include="Sources\Effects\FlowWord.h" />
+    <ClInclude Include="Sources\Effects\FlowWord2.h" />
     <ClInclude Include="Sources\Effects\LightBunch.h" />
     <ClInclude Include="Sources\Effects\Missle.h" />
     <ClInclude Include="Sources\Entity\Enermy.h" />

@@ -5,6 +5,7 @@
 #include "SimpleAudioEngine.h"
 #include "Effects\LightBunch.h"
 #include "Effects\FlowWord.h"
+#include "Effects\AnimationUtil.h"
 
 USING_NS_CC;
 using namespace cocos2d::extension;
@@ -18,6 +19,7 @@ Friend::Friend(const char *fileName)
 	mTriggleFlag = false;
 	mParticleSystem = NULL;
 	mLevel = 0;
+	mFxSprite = NULL;
 
 	CCSprite *sprite = CCSprite::create(fileName);
 	bindSprite(sprite);
@@ -63,7 +65,7 @@ void Friend::update(float delta)
 		if(NULL == m_magicSprite)
 		{
 			m_magicSprite = CCSprite::create("magic.png");
-			m_magicSprite->setScale(0.3);
+			m_magicSprite->setScale(0.5);
 			m_magicSprite->setPosition(CCNode::getPosition());
 			CCNode::getParent()->addChild(m_magicSprite, 1);		//放在英雄下面
 		}
@@ -165,6 +167,7 @@ void Friend::update(float delta)
 			reflectedVelocity.x = -2*(mxSpeed*normalVec.x+mySpeed*normalVec.y)*normalVec.x/normalVec.getLength() + mxSpeed;
 			reflectedVelocity.y = -2*(mxSpeed*normalVec.x+mySpeed*normalVec.y)*normalVec.y/normalVec.getLength() + mySpeed;
 			setAttackSpeed(reflectedVelocity.x, reflectedVelocity.y);
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("CollideWall.mp3");
 		}
 	}
 	m_controller->normalizePos(this);
@@ -219,6 +222,17 @@ void Friend::attack2()
 	{
 	case 1:
 		//爆炸特效
+		{
+		mFxSprite = CCSprite::create("FriendAttack1_1.png");
+		this->getParent()->addChild(mFxSprite, 5);
+		mFxSprite->setScale(3);
+		mFxSprite->setPosition(this->getPosition());
+		CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("FriendAttack1_", 12, 0.1f, 1, CCRectMake(0, 0, 256, 256));
+		mFxSprite->runAction(CCAnimate::create(animation));
+		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExplode.mp3");
+		}
+		/*
 		mParticleSystem = CCParticleExplosion::create();
 		mParticleSystem->setDuration(FRIEND_ATTACK_TIME);
 		mParticleSystem->setLife(FRIEND_ATTACK_TIME);
@@ -231,9 +245,21 @@ void Friend::attack2()
 		this->addChild(mParticleSystem);
 		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExplode.wav");
+		*/
 		break;
 	case 2:
 		//扩散特效
+		{
+		mFxSprite = CCSprite::create("FriendAttack2_1.png");
+		this->getParent()->addChild(mFxSprite, 5);
+		mFxSprite->setScale(10);
+		mFxSprite->setPosition(this->getPosition());
+		CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("FriendAttack2_", 11, 0.1f, 1, CCRectMake(0, 0, 256, 256));
+		mFxSprite->runAction(CCAnimate::create(animation));
+		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExpand.mp3");
+		}
+		/*
 		mParticleSystem = CCParticleFlower::create();
 		mParticleSystem->setTexture( CCTextureCache::sharedTextureCache()->addImage("stars.png"));
 		mParticleSystem->setLifeVar(0);
@@ -245,15 +271,26 @@ void Friend::attack2()
 		this->addChild(mParticleSystem);
 		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExpand.mp3");
+		*/
 		break;
+
 	case 3:
 		//激光束特效
-		LightBunch *pLightBunch = LightBunch::create();
-		CCNode::addChild(pLightBunch);
-		pLightBunch->show();
-
+		//LightBunch *pLightBunch = LightBunch::create();
+		//CCNode::addChild(pLightBunch);
+		//pLightBunch->show();
+		{
+		mFxSprite = CCSprite::create("FriendAttack3_1.png");
+		this->getParent()->addChild(mFxSprite, 0);
+		mFxSprite->setScale(2);
+		mFxSprite->setPosition(this->getPosition());
+		CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("FriendAttack3_", 15, 0.1f, 1, CCRectMake(0, 0, 1110, 1110));
+		mFxSprite->runAction(CCAnimate::create(animation));
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendLightBunch.mp3");
 		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
+		}
+		//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendLightBunch.mp3");
+		//scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
 		break;
 	}
 	mTriggleFlag = true;
@@ -267,15 +304,32 @@ void Friend::attack2End(float)
 	switch(mLevel)
 	{
 	case 1:
-		m_controller->enermyAttacked(this, 300, mAttack2Hurt);
-		mParticleSystem->getParent()->removeChild(mParticleSystem);
+		if(mFxSprite != NULL)
+		{
+			mFxSprite->removeFromParentAndCleanup(true);
+			mFxSprite = NULL;
+			m_controller->enermyAttacked(this, 300, mAttack2Hurt);
+		}
+		break;
+		//m_controller->enermyAttacked(this, 300, mAttack2Hurt);			//有一个攻击范围
+		//mParticleSystem->getParent()->removeChild(mParticleSystem);
 		break;
 	case 2:
-		m_controller->enermyAttacked(NULL, mAttack2Hurt);
-		mParticleSystem->getParent()->removeChild(mParticleSystem);
+		if(mFxSprite != NULL)
+		{
+			mFxSprite->removeFromParentAndCleanup(true);
+			mFxSprite = NULL;
+			m_controller->enermyAttacked(NULL, mAttack2Hurt);
+		}
 		break;
 	case 3:
-		m_controller->enermyAttackedByLaser(this, mAttack2Hurt);
+		if(mFxSprite != NULL)
+		{
+			mFxSprite->removeFromParentAndCleanup(true);
+			mFxSprite = NULL;
+			//m_controller->enermyAttacked(NULL, mAttack2Hurt);
+			m_controller->enermyAttackedByLaser(this, mAttack2Hurt);
+		}
 		break;
 	}
 	m_controller->removeAttackingFriend();

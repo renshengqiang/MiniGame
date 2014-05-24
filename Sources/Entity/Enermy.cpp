@@ -17,6 +17,7 @@ Enermy::Enermy(const char *fileName)
 	m_autoAttack = true;
 	m_particleSystem = NULL;
 	mType = 1;
+	mFXSprite = NULL;
 }
 
 void  Enermy::bindSprite(cocos2d::CCSprite *sprite)
@@ -53,6 +54,7 @@ void Enermy::attack()
 		break;
 	case 2:
 		{
+			/*
 			mAttackedFriend = m_controller->getOneAttackedFriend();
 			CCPoint friendPos = mAttackedFriend->getPosition();
 			Missle *pMissle = Missle::create();
@@ -60,21 +62,45 @@ void Enermy::attack()
 			pMissle->show(this->getPosition(), mAttackedFriend->getPosition());
 			mFXSprite = pMissle;
 			scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
+			*/
+			CCPoint pos[15] = {CCPoint(100, 200), CCPoint(300, 250), CCPoint(500, 200), CCPoint(650, 180),
+							   CCPoint(200, 400), CCPoint(400, 450), CCPoint(600, 500), 
+							   CCPoint(100, 800), CCPoint(300, 900), CCPoint(500, 850), CCPoint(700, 870),
+							   CCPoint(200, 1000),CCPoint(400, 1050),CCPoint(550, 1100),CCPoint(300, 1200)};
+			mFXSprite = CCSprite::create();
+			this->getParent()->addChild(mFXSprite);
+
+			for(int i=0; i<15; ++i)
+			{
+				CCSprite *pSprite = CCSprite::create("EnermyAttack2_1.png");
+				mFXSprite->addChild(pSprite);
+				pSprite->setPosition(pos[i]);
+				CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("EnermyAttack2_", 5, 0.16f, 2, CCRectMake(0, 0, 201, 228));
+				pSprite->runAction(CCAnimate::create(animation));
+			}
+			scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
 		}
 		break;
 	case 3:
-		m_particleSystem = CCParticleExplosion::create();
-		m_particleSystem->setDuration(ENERMY_ATTACK_TIME);
-		m_particleSystem->setLife(ENERMY_ATTACK_TIME);
-		m_particleSystem->setSpeed(m_particleSystem->getSpeed() * 4);
-		m_particleSystem->setTexture(CCTextureCache::sharedTextureCache()->addImage("fire.png"));
-		m_particleSystem->setAutoRemoveOnFinish(true);
-		m_particleSystem->setPositionType(kCCPositionTypeGrouped);
-		m_particleSystem->setPosition(ccp(0, 0));
-		this->addChild(m_particleSystem);
-		scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
+		{
+		CCPoint pos[15] = {CCPoint(100, 200), CCPoint(300, 250), CCPoint(500, 200), CCPoint(650, 180),
+							   CCPoint(200, 400), CCPoint(400, 450), CCPoint(600, 500), 
+							   CCPoint(100, 800), CCPoint(300, 900), CCPoint(500, 850), CCPoint(700, 870),
+							   CCPoint(200, 1000),CCPoint(400, 1050),CCPoint(550, 1100),CCPoint(300, 1200)};		
+		mFXSprite = CCSprite::create();
+		this->getParent()->addChild(mFXSprite);
 
+		for(int i=0; i<15; ++i)
+		{
+			CCSprite *pSprite = CCSprite::create("EnermyAttack3_1.png");
+			mFXSprite->addChild(pSprite);
+			pSprite->setPosition(pos[i]);
+			CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("EnermyAttack3_", 5, 0.16f, 2, CCRectMake(0, 0, 201, 228));
+			pSprite->runAction(CCAnimate::create(animation));
+		}
+		scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossSkill.mp3");
+		}
 		break;
 	}
 }
@@ -89,20 +115,28 @@ void Enermy::underAttack(int hp)
 
 	if(dead())
 	{	
-		// 播放死亡特效,生成一个金币，并向道具栏漂移
-		CCBlink *blinkDieAction = CCBlink::create(1,5);
-		CCCallFunc *dieEndAction = CCCallFunc::create(this, callfunc_selector(Enermy::die));
-		CCSequence *dieAction = CCSequence::create(blinkDieAction, dieEndAction, NULL);
-		this->runAction(dieAction);
-
-		CCSprite *props = CCSprite::create("props.png");
-		CCBlink *blinkAction = CCBlink::create(0.2,3);
-		CCMoveTo *moveAction = CCMoveTo::create(0.5, ccp(10, SCREEN_HEIGHT-10));
-		CCCallFuncND *funcAction = CCCallFuncND::create(this, callfuncND_selector(Enermy::propsMoveEnd),(void *)props);
-		CCSequence *propsAction = CCSequence::create(blinkAction, moveAction, funcAction, NULL);
-		props->setPosition(this->getPosition()+ccp(0, -FRIEND_SIZE));
-		this->getParent()->addChild(props);
-		props->runAction(propsAction);
+		if(mType <= 2)
+		{
+			// Enermy死亡特效
+			mFXSprite = CCSprite::create("EnermyDie1.png");
+			mFXSprite->setScale(3.0f);
+			this->getParent()->addChild(mFXSprite, 5);
+			mFXSprite->setPosition(this->getPosition());
+			CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("EnermyDie", 10, 0.1f, 1, CCRectMake(0, 0, 100, 105));
+			mFXSprite->runAction(CCAnimate::create(animation));
+			scheduleOnce(schedule_selector(Enermy::die), 1);
+		}
+		else
+		{
+			// Boss死亡特效
+			mFXSprite = CCSprite::create("BossDie1.png");
+			this->getParent()->addChild(mFXSprite, 5);
+			mFXSprite->setScale(2.0f);
+			mFXSprite->setPosition(this->getPosition());
+			CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("BossDie", 10, 0.1f, 1, CCRectMake(0, 0, 323, 360));
+			mFXSprite->runAction(CCAnimate::create(animation));
+			scheduleOnce(schedule_selector(Enermy::die), 1);
+		}
 	}
 	else
 	{
@@ -117,7 +151,7 @@ void Enermy::underAttack(int hp)
 
 void Enermy::underAttackEnd()
 {
-	m_controller->removeAttackedEnermy();
+	m_controller->removeAttackedEnermy(this);
 }
 
 void Enermy::setController(GameController *controller)
@@ -147,18 +181,17 @@ void Enermy::attackTempEnd(float)
 
 void Enermy::attackEnd(float)
 {
+	m_activated = false;
+	mFXSprite->removeFromParentAndCleanup(true);
+	mFXSprite = NULL;
 	// 通知controller对所有选手进行一次伤害
-	if(mType <= 2)
+	if(mType <= 1)
 	{
-		mFXSprite->getParent()->removeChild(mFXSprite);
 		m_controller->friendsAttacked(mAttackedFriend, mAttackHurt);
 	}
 	else
 	{
-		m_activated = false;
 		m_controller->friendsAttacked(NULL, mAttackHurt);
-		m_particleSystem->getParent()->removeChild(m_particleSystem);
-		m_particleSystem = NULL;
 	}
 	scheduleOnce(schedule_selector(Enermy::attackEndEnd), 0.3*ENERMY_ATTACK_TIME);
 }
@@ -168,17 +201,38 @@ void Enermy::attackEndEnd(float)
 	m_controller->leaveFromAttacking(this);
 }
 
-void Enermy::die()
+void Enermy::die(float)
 {
 	setVisible(false);
+
+	if( mFXSprite != NULL )
+	{
+		mFXSprite->removeFromParentAndCleanup(true);
+		mFXSprite = NULL;
+	}
+
 	// 播放掉金币特效
 	mpJinbiSprite = CCSprite::create("jinbi1.png");
-	mpJinbiSprite->setScale(2);
+	mpJinbiSprite->setScale(1.5);
 	this->getParent()->addChild(mpJinbiSprite);
 	mpJinbiSprite->setPosition(this->getPosition());
 	CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("jinbi", 10, 0.2f, 1, CCRectMake(0, 0, 250, 250));
 	mpJinbiSprite->runAction(CCAnimate::create(animation));
 	scheduleOnce(schedule_selector(Enermy::dieEnd), 2);
+
+	
+	if(mType > 2)
+	{
+		// 生成一个科技残片飘向道具栏
+		CCSprite *props = CCSprite::create("props.png");
+		CCBlink *blinkAction = CCBlink::create(0.2,3);
+		CCMoveTo *moveAction = CCMoveTo::create(0.3, ccp(SCREEN_WIDTH - 10, 10));
+		CCCallFuncND *funcAction = CCCallFuncND::create(this, callfuncND_selector(Enermy::propsMoveEnd),(void *)props);
+		CCSequence *propsAction = CCSequence::create(blinkAction, moveAction, funcAction, NULL);
+		props->setPosition(this->getPosition()+ccp(0, -FRIEND_SIZE));
+		this->getParent()->addChild(props);
+		props->runAction(propsAction);
+	}
 }
 
 void Enermy::dieEnd(float)
@@ -190,7 +244,7 @@ void Enermy::dieEnd(float)
 	}
 
 	// 通知controller以进行下一步的攻击
-	m_controller->removeAttackedEnermy();
+	m_controller->removeAttackedEnermy(this);
 }
 
 void Enermy::propsMoveEnd(CCNode *pSender, void *data)

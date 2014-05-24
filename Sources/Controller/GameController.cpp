@@ -4,7 +4,8 @@
 #include "Scenes\WinScene.h"
 #include "Scenes\GameScene.h"
 #include "Scenes\CombatResultsScene.h"
-#include "UI\Toolbar.h"
+//#include "UI\Toolbar.h"
+//#include "UI\Statusbar.h"
 #include "Utils.h"
 #include "SimpleAudioEngine.h"
 
@@ -12,8 +13,8 @@ USING_NS_CC;
 
 float _calcRatio(cocos2d::CCPoint delta)
 {
-	cocos2d::CCPoint max = cocos2d::CCPoint(SCREEN_WIDTH, SCREEN_HEIGHT);
-	return delta.getLength()/max.getLength();
+	float max = FRIEND_RADIUS*4;
+	return delta.getLength()/max > 1 ? 1 : delta.getLength()/max;
 }
 
 bool GameController::init()
@@ -28,6 +29,8 @@ bool GameController::init()
 	mAttackedEnermyCnt = 0;
 	mpArrowSprite = NULL;
 	mIsFingerDown = false;
+	//mToolbar = NULL;
+	//mStatusbar = NULL;
 	return true;
 }
 
@@ -42,23 +45,24 @@ void GameController::update(float delta)
 void GameController::normalizePos(Entity *pEntity)
 {
 	CCPoint pos = pEntity->getTagPosition();
+	int size = pEntity->getSize();
 	
-	if(pos.x < FRIEND_SIZE/2)
+	if(pos.x < size)
 	{
-		pos.x = FRIEND_SIZE/2;
+		pos.x = size;
 	}
-	else if( pos.x > SCREEN_WIDTH - FRIEND_SIZE/2)
+	else if( pos.x > SCREEN_WIDTH - size)
 	{
-		pos.x = SCREEN_WIDTH - FRIEND_SIZE/2;
+		pos.x = SCREEN_WIDTH - size;
 	}
 
-	if(pos.y < FRIEND_SIZE/2 + WIDGET_HEIGHT)
+	if(pos.y < size + WIDGET_HEIGHT)
 	{
-		pos.y = FRIEND_SIZE/2 + WIDGET_HEIGHT;
+		pos.y = size + WIDGET_HEIGHT;
 	}
-	else if(pos.y > SCREEN_HEIGHT - FRIEND_SIZE/2 - WIDGET_HEIGHT)
+	else if(pos.y > SCREEN_HEIGHT - size)
 	{
-		pos.y = SCREEN_HEIGHT - FRIEND_SIZE/2  - WIDGET_HEIGHT;
+		pos.y = SCREEN_HEIGHT - size;
 	}
 	pEntity->setTagPosition(pos.x, pos.y);
 }
@@ -110,7 +114,7 @@ Friend *GameController::conflictWithFriend(Friend *collider)
 		if(mFriendVec[i]->dead()) continue;
 		CCPoint pos2 = mFriendVec[i]->getTagPosition();
 		CCPoint dist = pos2 - pos;
-		if(ccpLength(dist) <= FRIEND_SIZE)
+		if(ccpLength(dist) <= FRIEND_RADIUS*2)
 			return mFriendVec[i];
 	}
 
@@ -132,7 +136,7 @@ Enermy *GameController::conflictWithEnermy(Friend *collider)
 		CCPoint pos2 = mEnermyVec[i]->getTagPosition();
 		CCPoint dist = pos2 - pos;
 
-		if(ccpLength(dist) <= FRIEND_SIZE)
+		if( ccpLength(dist) <= collider->getSize() + mEnermyVec[i]->getSize() )
 		{
 			return mEnermyVec[i];
 		}
@@ -156,22 +160,22 @@ bool GameController::conflictWithWall(Friend *collider, cocos2d::CCPoint &wallNo
 {
 	bool ret = true;
 	CCPoint pos = collider->getTagPosition();
-	if(pos.x < FRIEND_SIZE/2)
+	if(pos.x < collider->getSize())
 	{
 		wallNormal.x = 1;
 		wallNormal.y = 0;
 	}
-	else if(pos.y < FRIEND_SIZE/2+WIDGET_HEIGHT)
+	else if(pos.y < collider->getSize()+WIDGET_HEIGHT)
 	{
 		wallNormal.x = 0;
 		wallNormal.y = 1;
 	}
-	else if(pos.x > SCREEN_WIDTH - FRIEND_SIZE/2)
+	else if(pos.x > SCREEN_WIDTH - collider->getSize())
 	{
 		wallNormal.x = -1;
 		wallNormal.y = 0;
 	}
-	else if(pos.y > SCREEN_HEIGHT - FRIEND_SIZE/2-WIDGET_HEIGHT)
+	else if(pos.y > SCREEN_HEIGHT - collider->getSize())
 	{
 		wallNormal.x = 0;
 		wallNormal.y = -1;
@@ -266,12 +270,12 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 			{
 				if(mFriendVec[index] != NULL) break;
 			}
-			mToolbar->setEntity(mFriendVec[index]);
+			//mToolbar->setEntity(mFriendVec[index]);
 			return;
 		}
 	}
 
-	mToolbar->setEntity(mAttackingEntity);
+	//mToolbar->setEntity(mAttackingEntity);
 
 	// 设置为激活状态，如果是自动攻击对象则进行自动攻击
 	mAttackingEntity->setActive(true);
@@ -309,10 +313,16 @@ void GameController::addAttackedEnermy()
 
 }
 
-void GameController::removeAttackedEnermy()
+void GameController::removeAttackedEnermy(Enermy *pEnermy)
 {
 	--mAttackedEnermyCnt;
 	leaveFromAttacking(NULL);
+
+	//if(pEnermy->dead() && mStatusbar)
+	//{
+	//	mStatusbar->addBuff1(pEnermy->getBuff1());
+	//	mStatusbar->addBuff2(pEnermy->getBuff2());
+	//}
 }
 /*
 ** 怪物发动攻击，主角和友军会同时受到攻击
@@ -348,7 +358,8 @@ void  GameController::friendsAttacked(Friend *pFriend, int hp)
 	}
 	if(true == endFlag)
 	{
-		// TODO:首先要判断主角是否已经死亡，若主角死亡则直接调用结束场景
+		CCScene *pScene = CombatResultsScene::scene();
+		CCDirector::sharedDirector()->replaceScene(pScene);
 	}
 }
 
@@ -409,10 +420,6 @@ void GameController::enermyAttacked(Friend *pFriend, float dis, int hp)
 			{
 				mEnermyVec[i]->underAttack(hp);
 			}
-			else
-			{
-				CCLog("d: %f\n", d);
-			}
 		}
 	}
 }
@@ -463,7 +470,6 @@ bool GameController::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
 
 	if(mTouchBeginPos.y < WIDGET_HEIGHT) return true;
 	if(mTouchBeginPos.y >= visibleSize.height - WIDGET_HEIGHT) return true;
-	//TODO: 判断当前是哪个选手在进行攻击，并且创建箭头
 	mpArrowSprite = CCSprite::create("arrow.png");
 	//mpArrowSprite->setScaleX(2.0f);
 	CCLayer::addChild(mpArrowSprite);
@@ -486,14 +492,13 @@ void GameController::ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent)
 	touchPos = CCDirector::sharedDirector()->convertToGL(touchPos);
 	mTouchEndPos = touchPos;
 
-	//TODO:改变箭头方向 
 	CCPoint delta = mTouchBeginPos - touchPos;
 	float angle = delta.getAngle(CCPoint(1,0));
 	float ratio = _calcRatio(delta);
 	if(mpArrowSprite)
 	{
 		mpArrowSprite->setRotation(angle*180/M_PI);
-		mpArrowSprite->setScaleX(3*ratio+1);
+		mpArrowSprite->setScaleX(2*ratio+1);
 	}
 }
 
