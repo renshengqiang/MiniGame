@@ -66,17 +66,17 @@ bool GameLevelSelectScene::init()
     this->addChild(pMenu_QQ, 1);
 
 	CCMenuItemImage *pEnterItem_G = CCMenuItemImage::create(
-                                        "guanka3.png",
-                                        "guanka3.png",
+                                        "guanka3selected.png",
+                                        "guanka3selected.png",
                                         this,
-                                       0);
+                                       menu_selector(GameLevelSelectScene::changescenemenu));
     
 	pEnterItem_G->setPosition(ccp(origin.x + visibleSize.width/2+265,
                             origin.y + visibleSize.height/2-20));
     // create menu, it's an autorelease object
     CCMenu* pMenu_G = CCMenu::create(pEnterItem_G, NULL);
     pMenu_G->setPosition(CCPointZero);
-    this->addChild(pMenu_G, 1);
+    this->addChild(pMenu_G, 10);
 
     /////////////////////////////
     // 3. add your codes below...
@@ -119,6 +119,15 @@ void GameLevelSelectScene::changescene2HeroSelect(CCObject* pSender){
 	CCScene * scene2=HeroIntroScene::scene();
 	CCTransitionScene * s3=CCTransitionFade::create(1,scene2);
 	CCDirector::sharedDirector()->replaceScene(s3);
+}
+
+void GameLevelSelectScene::changescenemenu(CCObject* pSender){
+	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
+	CCSprite* sp4 = CCSprite::create("guanka3.png");
+	sp4->setPosition(ccp(origin.x + visibleSize.width/2+265,
+                            origin.y + visibleSize.height/2-20));
+	this->addChild(sp4, 20);
 }
 
 void GameLevelSelectScene::onEnter(){
