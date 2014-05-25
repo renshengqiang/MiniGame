@@ -41,10 +41,6 @@ CCScene* GameScene::scene()
 
 void GameScene::initWidget()
 {
-	//mStatusbar = Statusbar::create();
-	//this->addChild(mStatusbar, 5);
-	//mToolbar = Toolbar::create();
-	//this->addChild(mToolbar, 5);
 	CCSprite *showSprite = CCSprite::create("show.png");
 	this->addChild(showSprite, 5);
 	showSprite->setPosition(ccp(SCREEN_WIDTH/2, WIDGET_HEIGHT/2));
@@ -70,16 +66,13 @@ void GameScene::initPlayer()
 	mGameController = GameController::create();
 	CCLayer::addChild(mGameController);
 
-	//mGameController->setToolbar(mToolbar);
-	//mGameController->setStatusbar(mStatusbar);
-
 	// 创建2个Friends
 	CCPoint pos[3];
 	char *friendFileName[3] = {"Hero.png", "Friend1.png", "Friend2.png"};
 	for(int i=0; i<3; ++i)
 	{
 		pos[i].x = visibleSize.width/6*(2*i+1);
-		pos[i].y = FRIEND_SIZE + WIDGET_HEIGHT *4;
+		pos[i].y = FRIEND_SIZE +400;
 	}
 
 	for(int i=0; i<3; ++i)
@@ -91,7 +84,6 @@ void GameScene::initPlayer()
 		pFriend->setController(mGameController);
 	}
 	mGameController->setAttackingEntity(mFriendVec[0]);
-	//mToolbar->setEntity(mFriendVec[0]);
 	mFriendVec[1]->increaseLevel();
 	mFriendVec[2]->increaseLevel();
 	mFriendVec[2]->increaseLevel();
@@ -161,8 +153,8 @@ void GameScene::increaseLevel()
 		mBGParent->runAction(pAction);
 		mLevel = 3;
 
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("BossBGMusic.wav", true);
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossAccur.mp3");
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("BossBGMusic.wav", true);
 	}
 	else
 	{
@@ -266,6 +258,10 @@ void GameScene::initLevel3()
 void GameScene::moveEnd()
 {
 	//删除原来的背景
-	mBGsprite->getParent()->removeChild(mBGsprite);
-	mBGsprite = mBGsprite2;
+	if(mBGsprite)
+	{
+		mBGsprite->removeFromParentAndCleanup(true);
+		mBGsprite = mBGsprite2;
+		mBGsprite2 = NULL;
+	}
 }

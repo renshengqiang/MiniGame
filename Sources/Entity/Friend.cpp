@@ -48,12 +48,16 @@ void Friend::setAttackSpeed(float x, float y)
 	mySpeed = y;
 	mAcceleration = CCPoint(x,y).getLength()/FRIEND_ATTACK_TIME;//保证最后的速度是原来的一半
 }
+
 void Friend::setController(GameController *controller)
 {
 	Entity::setController(controller);
 
 	// 具体的通知controller的函数不一样
-	controller->addFriend(this);
+	if(controller)
+	{
+		controller->addFriend(this);
+	}
 }
 
 void Friend::update(float delta)
@@ -167,7 +171,7 @@ void Friend::update(float delta)
 			reflectedVelocity.x = -2*(mxSpeed*normalVec.x+mySpeed*normalVec.y)*normalVec.x/normalVec.getLength() + mxSpeed;
 			reflectedVelocity.y = -2*(mxSpeed*normalVec.x+mySpeed*normalVec.y)*normalVec.y/normalVec.getLength() + mySpeed;
 			setAttackSpeed(reflectedVelocity.x, reflectedVelocity.y);
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("CollideWall.mp3");
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("CollideWall.wav");
 		}
 	}
 	m_controller->normalizePos(this);
@@ -199,7 +203,11 @@ void Friend::attackEnd()
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	m_attacking = false;
 	m_activated = false;
-	m_controller->leaveFromAttacking(this);
+
+	if(m_controller)
+	{
+		m_controller->leaveFromAttacking(this);
+	}
 
 	/*扣血飘字效果*/
 	if(mAttackCnt > 1)
@@ -230,7 +238,7 @@ void Friend::attack2()
 		CCAnimation *animation = AnimationUtil::createAnimWithFrameNameAndNum("FriendAttack1_", 12, 0.1f, 1, CCRectMake(0, 0, 256, 256));
 		mFxSprite->runAction(CCAnimate::create(animation));
 		scheduleOnce(schedule_selector(Friend::attack2End), FRIEND_ATTACK_TIME);
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExplode.mp3");
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("FriendExplode.wav");
 		}
 		/*
 		mParticleSystem = CCParticleExplosion::create();

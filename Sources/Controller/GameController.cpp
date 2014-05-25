@@ -217,7 +217,11 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 		int index = 0;
 		for(int i=0; i<mEntityVec.size(); ++i)
 		{
-			if(pAttackingEntity == mEntityVec[i]) index = i;
+			if(pAttackingEntity == mEntityVec[i]) 
+			{
+				index = i;
+				break;
+			}
 		}
 		index = (index+1)%mEntityVec.size();
 
@@ -243,6 +247,7 @@ void GameController::leaveFromAttacking(Entity *pAttackingEntity)
 
 		CCScene *pScene = CombatResultsScene::scene();
 		CCDirector::sharedDirector()->replaceScene(pScene);
+		return;
 	}
 
 
