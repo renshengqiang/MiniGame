@@ -52,8 +52,8 @@ bool ModeSelectScene::init()
     this->addChild(pMenu_WX, 1);
 
 	CCMenuItemImage *pEnterItem_QQ = CCMenuItemImage::create(
-                                        "HeroMode.png",
-                                        "HeroModeSelected.png",
+                                        "ChallengeMode.png",
+                                        "ChallengeModeSelected.png",
                                         this,
                                         menu_selector(ModeSelectScene::changescene));
     
@@ -103,20 +103,21 @@ bool ModeSelectScene::init()
 	sp4->setPosition(ccp(mysize.width/2, mysize.height/2-70));
 	this->addChild(sp4, 2);
     
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("IntroBGMusic.mp3", true);
     return true;
 }
 
 
 void ModeSelectScene::changescene(CCObject * obj){
 	CCScene * scene1=HeroIntroScene::scene();
-	CCTransitionScene * ss=CCTransitionCrossFade::create(1,scene1);
+	CCTransitionScene * ss=CCTransitionFade::create(1,scene1);
 	CCDirector::sharedDirector()->replaceScene(ss);
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
 }
 
 void ModeSelectScene::changescene2login(CCObject * obj){
 	CCScene * scene1=LoginScene::scene();
-	CCTransitionScene * ss=CCTransitionCrossFade::create(1,scene1);
+	CCTransitionScene * ss=CCTransitionFade::create(1,scene1);
 	CCDirector::sharedDirector()->replaceScene(ss);
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
 }

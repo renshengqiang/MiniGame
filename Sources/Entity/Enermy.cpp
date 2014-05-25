@@ -50,6 +50,7 @@ void Enermy::attack()
 			pArrow->show(this->getPosition(), mAttackedFriend->getPosition());
 			mFXSprite = pArrow;
 			scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("EnermyAttack.wav");
 		}
 		break;
 	case 2:
@@ -79,6 +80,7 @@ void Enermy::attack()
 				pSprite->runAction(CCAnimate::create(animation));
 			}
 			scheduleOnce(schedule_selector(Enermy::attackEnd), 0.7*ENERMY_ATTACK_TIME);
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("EnermyAttack.wav");
 		}
 		break;
 	case 3:
@@ -232,6 +234,11 @@ void Enermy::die(float)
 		props->setPosition(this->getPosition()+ccp(0, -FRIEND_SIZE));
 		this->getParent()->addChild(props);
 		props->runAction(propsAction);
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("BossDie.wav");
+	}
+	else
+	{
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("EnermyDie.wav");
 	}
 }
 

@@ -28,7 +28,7 @@ bool LoginScene::init()
     {
         return false;
     }
-    CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("IntroBGMusic.mp3", true);
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("LoginBGMusic.mp3", true);
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
     CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 

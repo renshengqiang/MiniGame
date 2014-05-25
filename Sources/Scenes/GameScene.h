@@ -28,6 +28,7 @@ private:
 	void addEnermy(Enermy *pEnermy, const cocos2d::CCPoint &pos);
 	void moveEnd();
 
+	void onPause(cocos2d::CCObject *pSender);
 private:
 	cocos2d::CCNode *mBGParent;		 //背景的父节点
 	cocos2d::CCSprite *mBGsprite;	 // 背景
@@ -36,6 +37,7 @@ private:
 	std::vector<Enermy*> mEnermyVec; // 敌人
 	int mLevel;						 // 目前的游戏等级
 	GameController *mGameController; // 游戏控制器
+	cocos2d::CCMenu *pPauseMenu;
 	//Toolbar *mToolbar;
 	//Statusbar *mStatusbar;
 };

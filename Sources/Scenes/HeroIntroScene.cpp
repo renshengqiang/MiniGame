@@ -6,6 +6,10 @@ using namespace cocos2d;
 
 USING_NS_CC;
 
+CCMenuItemImage *pEnterItem3,*pEnterItem4;
+CCSprite *sp_shop,*sp_hero_s,*sp_hero[MAX_Heros];
+CCMenu *pMenu3,*pMenu4;
+
 CCScene* HeroIntroScene::scene()
 {
     // 'scene' is an autorelease object
@@ -53,8 +57,8 @@ bool HeroIntroScene::init()
     this->addChild(pMenu_WX, 1);
 
 	CCMenuItemImage *pEnterItem_QQ = CCMenuItemImage::create(
-                                        "Envolution.png",
-                                        "EnvolutionSelected.png",	
+                                        "ToStar.png",
+                                        "ToStarSelected.png",	
                                         this,
                                         0);
     
@@ -85,7 +89,7 @@ bool HeroIntroScene::init()
                                         this,
                                         menu_selector(HeroIntroScene::changescene_return));
     
-	pEnterItem2->setPosition(ccp(origin.x + visibleSize.width/2+220,
+	pEnterItem2->setPosition(ccp(origin.x + visibleSize.width/2+150,
                             origin.y + visibleSize.height/2-480));
 
     // create menu, it's an autorelease object
@@ -93,7 +97,21 @@ bool HeroIntroScene::init()
     pMenu2->setPosition(CCPointZero);
     this->addChild(pMenu2, 1);
 
-	 CCMenuItemImage *pEnterItem3 = CCMenuItemImage::create(
+	CCMenuItemImage *pEnterItem7 = CCMenuItemImage::create(
+                                        "ShopButton.png",
+                                        "ShopButtonSelected.png",
+                                        this,
+                                        menu_selector(HeroIntroScene::changescene_shop));
+    
+	pEnterItem7->setPosition(ccp(origin.x + visibleSize.width/2-150,
+                            origin.y + visibleSize.height/2-480));
+
+    // create menu, it's an autorelease object
+    CCMenu* pMenu7 = CCMenu::create(pEnterItem7, NULL);
+    pMenu7->setPosition(CCPointZero);
+    this->addChild(pMenu7, 1);
+
+	 pEnterItem3 = CCMenuItemImage::create(
                                         "LeftArrow.png",
                                         "LeftArrow.png",
                                         this,
@@ -103,11 +121,11 @@ bool HeroIntroScene::init()
                             origin.y + visibleSize.height/2));
 
     // create menu, it's an autorelease object
-    CCMenu* pMenu3 = CCMenu::create(pEnterItem3, NULL);
+    pMenu3 = CCMenu::create(pEnterItem3, NULL);
     pMenu3->setPosition(CCPointZero);
     this->addChild(pMenu3, 1);
 
-	CCMenuItemImage *pEnterItem4 = CCMenuItemImage::create(
+	pEnterItem4 = CCMenuItemImage::create(
                                         "RightArrow.png",
                                         "RightArrow.png",
                                         this,
@@ -117,34 +135,32 @@ bool HeroIntroScene::init()
                             origin.y + visibleSize.height/2));
 
     // create menu, it's an autorelease object
-    CCMenu* pMenu4 = CCMenu::create(pEnterItem4, NULL);
+    pMenu4 = CCMenu::create(pEnterItem4, NULL);
     pMenu4->setPosition(CCPointZero);
     this->addChild(pMenu4, 1);
 
     /////////////////////////////
     // 3. add your codes below...
 	CCSize mysize=CCDirector::sharedDirector()->getWinSize();
-	CCSprite* sp = CCSprite::create("HeroIntroBG.png");
-	sp->setPosition(ccp(mysize.width/2, mysize.height/2));
-	//设置不同颜色区分
-	sp->setColor(ccc3(100,100,100));
-	this->addChild(sp, 0);
+	sp_hero_s = CCSprite::create("Primitve_Hero1.png");
+	sp_hero_s->setPosition(ccp(mysize.width/2, mysize.height/2));
+	this->addChild(sp_hero_s, 0);
 
-	CCSprite* sp5 = CCSprite::create("Hero1.png");
-	sp5->setPosition(ccp(mysize.width/2-154, mysize.height/2+450));
-	this->addChild(sp5, 0);
+	CCSprite* sp1 = CCSprite::create("Hero1.png");
+	sp1->setPosition(ccp(mysize.width/2-154, mysize.height/2+450));
+	this->addChild(sp1, 0);
 
-	CCSprite* sp6 = CCSprite::create("Hero2.png");
-	sp6->setPosition(ccp(mysize.width/2, mysize.height/2+450));
-	this->addChild(sp6, 0);
+	CCSprite* sp2 = CCSprite::create("Hero2.png");
+	sp2->setPosition(ccp(mysize.width/2, mysize.height/2+450));
+	this->addChild(sp2, 0);
 
-	CCSprite* sp7 = CCSprite::create("Hero3.png");
-	sp7->setPosition(ccp(mysize.width/2+154, mysize.height/2+450));
-	this->addChild(sp7, 0);
+	CCSprite* sp3 = CCSprite::create("Hero3.png");
+	sp3->setPosition(ccp(mysize.width/2+154, mysize.height/2+450));
+	this->addChild(sp3, 0);
 
-	CCSprite* sp8 = CCSprite::create("HeroIntro1.png");
-	sp8->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-	this->addChild(sp8, 0);
+	CCSprite* sp4 = CCSprite::create("HeroIntro1.png");
+	sp4->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+	this->addChild(sp4, 0);
 
     return true;
 }
@@ -159,8 +175,71 @@ void HeroIntroScene::changescene(CCObject* pSender){
 
 void HeroIntroScene::changescene_return(CCObject* pSender){
 	CCScene * scene=ModeSelectScene::scene();
-	CCTransitionScene * s10=CCTransitionJumpZoom::create(1,scene);
+	CCTransitionScene * s10=CCTransitionFade::create(1,scene);
 	CCDirector::sharedDirector()->replaceScene(s10);
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
+
+}
+
+void HeroIntroScene::changescene_shop(CCObject* pSender){
+	ShopSelectedIndex++;
+	int s_index=ShopSelectedIndex%2;
+	CCSize mysize=CCDirector::sharedDirector()->getWinSize();
+	switch(s_index)
+	{
+		case 0:
+		{
+			this->removeChild(sp_shop,0);
+			CCSize visibleSize1 = CCDirector::sharedDirector()->getVisibleSize();
+			CCPoint origin1 = CCDirector::sharedDirector()->getVisibleOrigin();
+			
+			pEnterItem3 = CCMenuItemImage::create(
+                                        "LeftArrow.png",
+                                        "LeftArrow.png",
+                                        this,
+                                        menu_selector(HeroIntroScene::changescene_left));
+    
+			pEnterItem3->setPosition(ccp(origin1.x + visibleSize1.width/2-280,
+									origin1.y + visibleSize1.height/2));
+
+			pMenu3 = CCMenu::create(pEnterItem3, NULL);
+			pMenu3->setPosition(CCPointZero);
+			this->addChild(pMenu3, 1);
+
+			pEnterItem4 = CCMenuItemImage::create(
+												"RightArrow.png",
+												"RightArrow.png",
+												this,
+												menu_selector(HeroIntroScene::changescene_right));
+    
+			pEnterItem4->setPosition(ccp(origin1.x + visibleSize1.width/2+280,
+									origin1.y + visibleSize1.height/2));
+
+			pMenu4 = CCMenu::create(pEnterItem4, NULL);
+			pMenu4->setPosition(CCPointZero);
+			this->addChild(pMenu4, 1);
+
+			sp_hero_s = CCSprite::create("Primitve_Hero1.png");
+			sp_hero_s->setPosition(ccp(mysize.width/2, mysize.height/2+40));
+			this->addChild(sp_hero_s, 0);
+			break;
+		}
+		case 1:
+		{
+			for(int i=0;i<MAX_Heros;i++)
+			{
+				this->removeChild(sp_hero[i],0);
+			}
+			this->removeChild(sp_hero_s,0);
+			this->removeChild(pMenu3,0);
+			this->removeChild(pMenu4,0);
+			sp_shop = CCSprite::create("shop.png");
+			sp_shop->setPosition(ccp(mysize.width/2, mysize.height/2+60));
+			this->addChild(sp_shop, 0);
+			break;
+		}
+		default:break;
+	}
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("ButtonClick.wav");
 
 }
@@ -169,33 +248,65 @@ void HeroIntroScene::changescene_left(CCObject* pSender){
 	SelectedMark--;
 	int m=abs(SelectedMark%MAX_Heros);
 	CCSize mysize=CCDirector::sharedDirector()->getWinSize();
+	for(int i=0;i<MAX_Heros;i++)
+	{
+		this->removeChild(sp_hero[i],0);
+	}
 	switch(m){
 	case 0:
 		{
-			CCSprite* sp1 = CCSprite::create("HeroIntro1.png");
-			sp1->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-			this->addChild(sp1, 2);
+			sp_hero[0] = CCSprite::create("Primitve_Hero1.png");
+			sp_hero[0]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[0], 2);
 			break;
 		}
 	case 1:
 		{
-			CCSprite* sp2 = CCSprite::create("HeroIntro1.png");
-			sp2->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-			this->addChild(sp2, 2);
+			sp_hero[1] = CCSprite::create("Human_Hero1.png");
+			sp_hero[1]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[1], 2);
 			break;
 		}
 	case 2:
 		{
-			CCSprite* sp3 = CCSprite::create("HeroIntro1.png");
-			sp3->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-			this->addChild(sp3, 2);
+			sp_hero[2] = CCSprite::create("Human_Hero2.png");
+			sp_hero[2]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[2], 2);
 			break;
 		}
 	case 3:
 		{
-			CCSprite* sp4 = CCSprite::create("HeroIntro1.png");
-			sp4->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-			this->addChild(sp4, 2);
+			sp_hero[3] = CCSprite::create("Super_Hero1.png");
+			sp_hero[3]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[3], 2);
+			break;
+		}
+	case 4:
+		{
+			sp_hero[4] = CCSprite::create("Super_Hero2.png");
+			sp_hero[4]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[4], 2);
+			break;
+		}
+	case 5:
+		{
+			sp_hero[5] = CCSprite::create("Super_Hero3.png");
+			sp_hero[5]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[5], 2);
+			break;
+		}
+	case 6:
+		{
+			sp_hero[6] = CCSprite::create("Shenmo_Hero1.png");
+			sp_hero[6]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[6], 2);
+			break;
+		}
+	case 7:
+		{
+			sp_hero[7] = CCSprite::create("Shenmo_Hero2.png");
+			sp_hero[7]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[7], 2);
 			break;
 		}
 	default:break;
@@ -207,33 +318,65 @@ void HeroIntroScene::changescene_right(CCObject* pSender){
 	SelectedMark++;
 	int m=abs(SelectedMark%MAX_Heros);
 	CCSize mysize=CCDirector::sharedDirector()->getWinSize();
+	for(int i=0;i<MAX_Heros;i++)
+	{
+		this->removeChild(sp_hero[i],0);
+	}
 	switch(m){
 	case 0:
 		{
-			CCSprite* sp1 = CCSprite::create("HeroIntro1.png");
-			sp1->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-			this->addChild(sp1, 2);
+			sp_hero[0] = CCSprite::create("Primitve_Hero1.png");
+			sp_hero[0]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[0], 2);
 			break;
 		}
 	case 1:
 		{
-			CCSprite* sp2 = CCSprite::create("HeroIntro1.png");
-			sp2->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-			this->addChild(sp2, 2);
+			sp_hero[1] = CCSprite::create("Human_Hero1.png");
+			sp_hero[1]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[1], 2);
 			break;
 		}
 	case 2:
 		{
-			CCSprite* sp3 = CCSprite::create("HeroIntro1.png");
-			sp3->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-			this->addChild(sp3, 2);
+			sp_hero[2] = CCSprite::create("Human_Hero2.png");
+			sp_hero[2]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[2], 2);
 			break;
 		}
 	case 3:
 		{
-			CCSprite* sp4 = CCSprite::create("HeroIntro1.png");
-			sp4->setPosition(ccp(mysize.width/2, mysize.height/2+20));
-			this->addChild(sp4, 2);
+			sp_hero[3] = CCSprite::create("Super_Hero1.png");
+			sp_hero[3]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[3], 2);
+			break;
+		}
+	case 4:
+		{
+			sp_hero[4] = CCSprite::create("Super_Hero2.png");
+			sp_hero[4]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[4], 2);
+			break;
+		}
+	case 5:
+		{
+			sp_hero[5] = CCSprite::create("Super_Hero3.png");
+			sp_hero[5]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[5], 2);
+			break;
+		}
+	case 6:
+		{
+			sp_hero[6] = CCSprite::create("Shenmo_Hero1.png");
+			sp_hero[6]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[6], 2);
+			break;
+		}
+	case 7:
+		{
+			sp_hero[7] = CCSprite::create("Shenmo_Hero2.png");
+			sp_hero[7]->setPosition(ccp(mysize.width/2, mysize.height/2+20));
+			this->addChild(sp_hero[7], 2);
 			break;
 		}
 	default:break;

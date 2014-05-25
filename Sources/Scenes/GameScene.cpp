@@ -2,7 +2,7 @@
 #include "Entity\Friend.h"
 #include "Entity\Enermy.h"
 #include "Controller\GameController.h"
-#include "Scenes\WinScene.h"
+#include "Scenes\PauseScene.h"
 #include "Scenes\CombatResultsScene.h"
 #include "UI\Toolbar.h"
 #include "UI\Statusbar.h"
@@ -28,6 +28,7 @@ bool GameScene::init()
 	initPlayer();
 	mLevel = 1;
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("FightBGMusic.mp3", true);
+
 	return true;
 }
 
@@ -41,10 +42,33 @@ CCScene* GameScene::scene()
 
 void GameScene::initWidget()
 {
+	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+
 	CCSprite *showSprite = CCSprite::create("show.png");
 	this->addChild(showSprite, 5);
 	showSprite->setPosition(ccp(SCREEN_WIDTH/2, WIDGET_HEIGHT/2));
 
+	CCMenuItemImage *pPauseMenuItem = CCMenuItemImage::create(
+                                        "stop.png",
+                                        "start.png",
+                                        this,
+										menu_selector(GameScene::onPause));
+    
+	pPauseMenuItem->setPosition(ccp(visibleSize.width-50, visibleSize.height-50));
+	pPauseMenu = CCMenu::create(pPauseMenuItem, NULL);
+    pPauseMenu->setPosition(CCPointZero);
+    this->addChild(pPauseMenu, 5);
+}
+
+void GameScene::onPause(cocos2d::CCObject *pSender)
+{
+	pPauseMenu->setVisible(false);
+	CCRenderTexture *renderTexture = CCRenderTexture::create(SCREEN_WIDTH, SCREEN_HEIGHT);
+    renderTexture->begin();
+    this->getParent()->visit();
+    renderTexture->end();  //这里实际是通过CCRenderTexture保存当前界面（相当于截屏），然后传递给暂停界面，当成背景精灵
+	pPauseMenu->setVisible(true);
+    CCDirector::sharedDirector()->pushScene(PauseScene::scene(renderTexture,true));
 }
 
 void GameScene::initBackground()

@@ -1,6 +1,7 @@
 #include "Scenes\CombatResultsScene.h"
 #include "Scenes\ModeSelectScene.h"
 #include "Scenes\GameLevelSelectScene.h"
+#include "Utils.h"
 using namespace cocos2d;
 
 USING_NS_CC;
@@ -44,37 +45,45 @@ bool CombatResultsScene::init()
                                         menu_selector(CombatResultsScene::changescene));
     
 	pEnterItem_WX->setPosition(ccp(origin.x + visibleSize.width/2-130,
-                            origin.y + visibleSize.height/2-200));
+                            origin.y + visibleSize.height/2-100));
 
     // create menu, it's an autorelease object
     CCMenu* pMenu_WX = CCMenu::create(pEnterItem_WX, NULL);
     pMenu_WX->setPosition(CCPointZero);
     this->addChild(pMenu_WX, 1);
 
-	CCMenuItemImage *pEnterItem_QQ = CCMenuItemImage::create(
-                                        "Exit.png",
-                                        "ExitSelected.png",
+	CCMenuItemImage *pEnterItem_SH = CCMenuItemImage::create(
+                                        "Share.png",
+                                        "ShareSelected.png",
                                         this,
-                                        menu_selector(CombatResultsScene::menuCloseCallback));
+                                        0);
     
-	pEnterItem_QQ->setPosition(ccp(origin.x + visibleSize.width/2+130,
-                            origin.y + visibleSize.height/2-200));
+	pEnterItem_SH->setPosition(ccp(origin.x + visibleSize.width/2+130,
+                            origin.y + visibleSize.height/2-100));
+
     // create menu, it's an autorelease object
-    CCMenu* pMenu_QQ = CCMenu::create(pEnterItem_QQ, NULL);
-    pMenu_QQ->setPosition(CCPointZero);
-    this->addChild(pMenu_QQ, 1);
+    CCMenu* pMenu_SH = CCMenu::create(pEnterItem_SH, NULL);
+    pMenu_SH->setPosition(CCPointZero);
+    this->addChild(pMenu_SH, 1);
 
     /////////////////////////////
     // 3. add your codes below...
 
     // add "HelloWorld" splash screen"
-    CCSprite* pSprite = CCSprite::create("BattleResult.png");
+    CCSprite* pSprite = CCSprite::create("BattleResultSuccess.png");
 
     // position the sprite on the center of the screen
     pSprite->setPosition(ccp(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
     // add the sprite as a child to this layer
     this->addChild(pSprite, 0);
+
+
+	//CCSprite* pSprite1 = CCSprite::create("show.png");
+
+ //   pSprite1->setPosition(ccp(SCREEN_WIDTH/2, WIDGET_HEIGHT/2));
+
+ //   this->addChild(pSprite1, 0);
 
     return true;
 }
@@ -83,7 +92,7 @@ bool CombatResultsScene::init()
 void CombatResultsScene::changescene(CCObject* pSender){
 	//新建一个GameLevelSelectScene的scene
 	CCScene * scene2=GameLevelSelectScene::scene();
-	CCTransitionScene * s8=CCTransitionFlipX::create(2,scene2);
+	CCTransitionScene * s8=CCTransitionFade::create(2,scene2);
 	CCDirector::sharedDirector()->replaceScene(s8);
 }
 

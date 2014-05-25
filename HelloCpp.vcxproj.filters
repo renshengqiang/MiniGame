@@ -48,9 +48,6 @@
     <ClCompile Include="Sources\Effects\FlowWord.cpp">
       <Filter>Effects</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scenes\WinScene.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scenes\HeroIntroScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
@@ -87,6 +84,12 @@
     <ClCompile Include="Sources\Effects\FlowWord2.cpp">
       <Filter>Effects</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Scenes\PauseScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scenes\CombatFailedScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\win32\main.h">
@@ -116,9 +119,6 @@
     <ClInclude Include="Sources\Utils.h" />
     <ClInclude Include="Sources\Effects\FlowWord.h">
       <Filter>Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scenes\WinScene.h">
-      <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scenes\HeroIntroScene.h">
       <Filter>Scenes</Filter>
@@ -155,6 +155,12 @@
     </ClInclude>
     <ClInclude Include="Sources\Effects\FlowWord2.h">
       <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scenes\PauseScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scenes\CombatFailedScene.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

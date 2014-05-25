@@ -5,8 +5,10 @@
 #include "Box2D\Box2D.h"
 #include "SimpleAudioEngine.h"
 
-#define MAX_Heros 4
+#define MAX_Heros 8
 static int SelectedMark=0;
+
+static int ShopSelectedIndex=0;
 
 class HeroIntroScene : public cocos2d::CCLayer
 {
@@ -24,6 +26,7 @@ public:
 	void changescene_left(CCObject* pSender);
 	void changescene_right(CCObject* pSender);
 	void changescene_return(CCObject* pSender);
+	void changescene_shop(CCObject* pSender);
 	//创建3个生命周期函数
 	virtual void onEnter();
 	virtual void onEnterTransitionDidFinish();

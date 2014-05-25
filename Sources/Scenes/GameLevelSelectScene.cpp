@@ -65,6 +65,19 @@ bool GameLevelSelectScene::init()
     pMenu_QQ->setPosition(CCPointZero);
     this->addChild(pMenu_QQ, 1);
 
+	CCMenuItemImage *pEnterItem_G = CCMenuItemImage::create(
+                                        "guanka3.png",
+                                        "guanka3.png",
+                                        this,
+                                       0);
+    
+	pEnterItem_G->setPosition(ccp(origin.x + visibleSize.width/2+265,
+                            origin.y + visibleSize.height/2-20));
+    // create menu, it's an autorelease object
+    CCMenu* pMenu_G = CCMenu::create(pEnterItem_G, NULL);
+    pMenu_G->setPosition(CCPointZero);
+    this->addChild(pMenu_G, 1);
+
     /////////////////////////////
     // 3. add your codes below...
 
@@ -84,10 +97,11 @@ bool GameLevelSelectScene::init()
 	this->addChild(sp1, 2);
 
 
-	CCSprite* sp2 = CCSprite::create("GameLevel.png");
+	CCSprite* sp2 = CCSprite::create("xuanguan_new.png");
 	sp2->setPosition(ccp(mysize.width/2+80, mysize.height/2+100));
 	this->addChild(sp2, 2);
-    
+
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("IntroBGMusic.mp3", true);
 
     return true;
 }
@@ -96,14 +110,14 @@ bool GameLevelSelectScene::init()
 void GameLevelSelectScene::changescene(CCObject* pSender){
 	//新建一个GameScene的scene
 	CCScene * scene2=GameScene::scene();
-	CCTransitionScene * s3=CCTransitionFadeBL::create(1,scene2);
+	CCTransitionScene * s3=CCTransitionFade::create(1,scene2);
 	CCDirector::sharedDirector()->replaceScene(s3);
 }
 
 void GameLevelSelectScene::changescene2HeroSelect(CCObject* pSender){
-	//新建一个GameScene的scene
+	//新建一个HeroIntroScene的scene
 	CCScene * scene2=HeroIntroScene::scene();
-	CCTransitionScene * s3=CCTransitionFadeBL::create(1,scene2);
+	CCTransitionScene * s3=CCTransitionFade::create(1,scene2);
 	CCDirector::sharedDirector()->replaceScene(s3);
 }
 

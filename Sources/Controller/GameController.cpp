@@ -1,7 +1,6 @@
 #include "GameController.h"
 #include "Entity\Friend.h"
 #include "Entity\Enermy.h"
-#include "Scenes\WinScene.h"
 #include "Scenes\GameScene.h"
 #include "Scenes\CombatResultsScene.h"
 //#include "UI\Toolbar.h"
